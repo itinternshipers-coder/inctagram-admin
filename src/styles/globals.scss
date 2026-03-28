@@ -1,0 +1,27 @@
+@use "./base/reset" as *;
+@use "./base/variables" as *;
+
+html {
+  color-scheme: light dark;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-family-primary), sans-serif;
+  line-height: 1.6;
+}
+
+body.select-open[data-scroll-locked] {
+  margin-right: 0 !important;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-500);
+  outline-offset: 2px;
+}
+
+::selection {
+  background-color: var(--accent-500);
+  color: var(--light-100);
+}
