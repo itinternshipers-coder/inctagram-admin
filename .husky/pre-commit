@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+echo "🔧 Запускаем pre-commit проверки..."
+pnpm exec lint-staged

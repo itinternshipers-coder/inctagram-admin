@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+set -e
+
+echo "🔍 Проверяем актуальность ветки..."
+
+git fetch origin develop --quiet
+
+if git merge-base --is-ancestor origin/develop HEAD; then
+  echo "✅ Ветка актуальна относительно develop"
+else
+  echo ""
+  echo "❌ Ветка отстает от develop!"
+  echo ""
+  echo "Выбери действие:"
+  echo "  [1] 🔄 Rebase (рекомендуется — линейная история)"
+  echo "  [2] 🔀 Merge (оставляет merge-коммит)"
+  echo "  [3] 🚫 Отмена (ничего не делать)"
+  echo ""
+
+  read -p "👉 Введи номер действия [1/2/3]: " choice
+
+  case "$choice" in
+    1)
+      echo "🔄 Выполняем rebase..."
+      git fetch origin develop
+      git rebase origin/develop || {
+        echo "⚠️ Конфликты при rebase. Разреши их вручную и продолжи:"
+        echo "   git rebase --continue"
+        echo "   или прерви: git rebase --abort"
+        exit 1
+      }
+      echo "✅ Rebase успешно выполнен!"
+      echo "🚀 Автоматический push после rebase..."
+      git push --force-with-lease
+      ;;
+    2)
+      echo "🔀 Выполняем merge..."
+      git fetch origin develop
+      git merge origin/develop || {
+        echo "⚠️ Конфликты при merge. Разреши их вручную, потом сделай commit."
+        exit 1
+      }
+      echo "✅ Merge успешно выполнен!"
+      ;;
+    3)
+      echo "🚫 Отменено пользователем."
+      exit 1
+      ;;
+    *)
+      echo "⚠️ Неверный ввод. Отменяем push."
+      exit 1
+      ;;
+  esac
+fi
+
+echo ""
+echo "🚀 Запускаем линтеры только на изменённых файлах..."
+
+# lint-staged для изменённых файлов
+pnpm exec lint-staged || {
+  echo "❌ Линтеры не пройдены!"
+  exit 1
+}
+
+echo ""
+echo "🔎 Typecheck (tsc --noEmit) ..."
+# Typecheck для типизации
+pnpm exec tsc --noEmit || {
+  echo "❌ Ошибка типизации!"
+  exit 1
+}
+
+echo ""
+
+echo "✅ Все проверки пройдены! Пуш разрешён."
+exit 0
+
+

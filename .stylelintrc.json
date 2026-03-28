@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json.schemastore.org/stylelintrc.json",
+  "extends": [
+    "stylelint-config-standard-scss",
+    "stylelint-config-prettier-scss"
+  ],
+  "plugins": [
+    "stylelint-order"
+  ],
+  "rules": {
+    "order/properties-alphabetical-order": null,
+    "no-descending-specificity": null,
+    "no-empty-source": null,
+    "no-duplicate-selectors": null,
+    "font-family-no-missing-generic-family-keyword": null,
+    "property-no-vendor-prefix": null,
+    "value-keyword-case": null,
+    "selector-class-pattern": [
+      ".*",
+      {}
+    ],
+    "max-nesting-depth": [
+      4,
+      {
+        "ignore": [
+          "blockless-at-rules"
+        ]
+      }
+    ],
+    "scss/at-import-partial-extension": null,
+    "scss/dollar-variable-pattern": null,
+    "scss/double-slash-comment-whitespace-inside": null,
+    "selector-pseudo-class-no-unknown": [
+      true,
+      {
+        "ignorePseudoClasses": [
+          "global"
+        ]
+      }
+    ]
+  },
+  "ignoreFiles": [
+    "node_modules",
+    ".next",
+    "out",
+    "dist",
+    "*.min.css",
+    "*.min.scss",
+    "storybook-static",
+    "coverage"
+  ]
+}
+
