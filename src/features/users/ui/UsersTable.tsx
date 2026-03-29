@@ -5,7 +5,7 @@ import s from './UsersTable.module.scss'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import BlockIcon from '@/shared/icons/BlockIcon'
 import MoreHorizontalOutlineIcon from '@/shared/icons/MoreHorizontalOutlineIcon'
-import Link from 'next/link'
+import { Table, TableBody, TableDataCell, TableHead, TableHeaderCell, TableRow } from '@/shared/ui'
 
 type UsersTableProps = {
   users: User[]
@@ -23,71 +23,67 @@ export function UsersTable({ users, sortDirection, onSort }: UsersTableProps) {
 
   return (
     <div className={s.tableWrapper}>
-      <table className={s.table}>
-        <thead>
-          <tr>
-            <th className={s.th}>
+      <Table className={s.table}>
+        <TableHead>
+          <TableRow>
+            <TableHeaderCell className={s.th}>
               <Typography variant="bold_text_14" as="span">
                 User ID
               </Typography>
-            </th>
-            <th className={`${s.th} ${s.sortable}`} onClick={onSort}>
+            </TableHeaderCell>
+            <TableHeaderCell className={`${s.th} ${s.sortable}`} onClick={onSort}>
               <Typography variant="bold_text_14" as="span">
                 Profile link{sortArrow}
               </Typography>
-            </th>
-            <th className={s.th}>
+            </TableHeaderCell>
+            <TableHeaderCell className={s.th}>
               <Typography variant="bold_text_14" as="span">
                 Username
               </Typography>
-            </th>
-            <th className={s.th}>
+            </TableHeaderCell>
+            <TableHeaderCell className={s.th}>
               <Typography variant="bold_text_14" as="span">
                 Date added
               </Typography>
-            </th>
-            <th className={s.th} />
-          </tr>
-        </thead>
-        <tbody>
+            </TableHeaderCell>
+            <TableHeaderCell className={s.th} />
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {users.map((user, index) => (
-            <tr key={index} className={s.row}>
-              <td className={s.td}>
+            <TableRow key={index} className={s.row}>
+              <TableDataCell className={s.td}>
                 <div className={s.userIdCell}>
                   {user.isBanned && <BlockIcon size={20} className={s.blockIcon} />}
                   <Typography variant="regular_text_14" as="span">
                     {user.id}
                   </Typography>
                 </div>
-              </td>
-              <td className={s.td}>
+              </TableDataCell>
+              <TableDataCell className={s.td}>
                 <Typography variant="regular_text_14" as="span">
                   {user.profileLink}
                 </Typography>
-              </td>
-              <td className={s.td}>
+              </TableDataCell>
+              <TableDataCell className={s.td}>
                 <Typography variant="regular_text_14" as="span">
                   {user.username}
                 </Typography>
-              </td>
-              <td className={s.td}>
+              </TableDataCell>
+              <TableDataCell className={s.td}>
                 <Typography variant="regular_text_14" as="span">
                   {formatDate(user.dataAdded)}
                 </Typography>
-              </td>
-              <td className={s.td}>
-                <Link
-                  href={`/users/${user.id}`}
-                  className={s.moreButton}
-                  aria-label={`More information about ${user.username}`}
-                >
+              </TableDataCell>
+              <TableDataCell className={s.td}>
+                <button className={s.moreButton}>
                   <MoreHorizontalOutlineIcon size={20} />
-                </Link>
-              </td>
-            </tr>
+                </button>
+              </TableDataCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
   )
 }
