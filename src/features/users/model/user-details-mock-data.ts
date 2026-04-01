@@ -3,10 +3,11 @@
 
 export type PaymentRow = {
   id: string
-  date: string
+  paymentDate: string
+  endDate: string
   amount: string
-  subscription: string
-  method: string
+  subscriptionType: string
+  paymentType: string
 }
 
 export type FollowRow = {
@@ -35,27 +36,88 @@ export const USER_DETAILS_PHOTO_URLS = [
 ]
 
 export const USER_DETAILS_PAYMENTS: PaymentRow[] = [
-  { id: 'p1', date: '12.12.2022', amount: '$10.00', subscription: '1 day', method: 'Stripe' },
-  { id: 'p2', date: '14.01.2023', amount: '$50.00', subscription: '7 days', method: 'PayPal' },
-  { id: 'p3', date: '03.02.2023', amount: '$100.00', subscription: '30 days', method: 'Stripe' },
-  { id: 'p4', date: '11.03.2023', amount: '$50.00', subscription: '7 days', method: 'PayPal' },
-  { id: 'p5', date: '29.04.2023', amount: '$100.00', subscription: '30 days', method: 'Stripe' },
-  { id: 'p6', date: '30.05.2023', amount: '$10.00', subscription: '1 day', method: 'Stripe' },
+  {
+    id: 'p1',
+    paymentDate: '12.12.2022',
+    endDate: '12.12.2022',
+    amount: '$10',
+    subscriptionType: '1 day',
+    paymentType: 'Stripe',
+  },
+  {
+    id: 'p2',
+    paymentDate: '12.12.2022',
+    endDate: '12.12.2022',
+    amount: '$50',
+    subscriptionType: '7 day',
+    paymentType: 'Stripe',
+  },
+  {
+    id: 'p3',
+    paymentDate: '12.12.2022',
+    endDate: '12.12.2022',
+    amount: '$10',
+    subscriptionType: '7 day',
+    paymentType: 'Stripe',
+  },
+  {
+    id: 'p4',
+    paymentDate: '12.12.2022',
+    endDate: '12.12.2022',
+    amount: '$10',
+    subscriptionType: '1 day',
+    paymentType: 'PayPal',
+  },
+  {
+    id: 'p5',
+    paymentDate: '12.12.2022',
+    endDate: '12.12.2022',
+    amount: '$50',
+    subscriptionType: '7 day',
+    paymentType: 'PayPal',
+  },
+  {
+    id: 'p6',
+    paymentDate: '12.12.2022',
+    endDate: '12.12.2022',
+    amount: '$50',
+    subscriptionType: '1 day',
+    paymentType: 'PayPal',
+  },
+  {
+    id: 'p7',
+    paymentDate: '12.12.2022',
+    endDate: '12.12.2022',
+    amount: '$50',
+    subscriptionType: '7 day',
+    paymentType: 'PayPal',
+  },
+  {
+    id: 'p8',
+    paymentDate: '12.12.2022',
+    endDate: '12.12.2022',
+    amount: '$50',
+    subscriptionType: '7 day',
+    paymentType: 'PayPal',
+  },
 ]
 
 export const USER_DETAILS_FOLLOWERS: FollowRow[] = [
-  { id: 'f1', username: 'kirill_admin', profileLink: '@kirill_admin', since: '15.02.2023' },
-  { id: 'f2', username: 'olga.pro', profileLink: '@olga.pro', since: '01.03.2023' },
-  { id: 'f3', username: 'smm_team', profileLink: '@smm_team', since: '18.03.2023' },
-  { id: 'f4', username: 'dev_junior', profileLink: '@dev_junior', since: '20.03.2023' },
-  { id: 'f5', username: 'travelblogger', profileLink: '@travelblogger', since: '08.04.2023' },
-  { id: 'f6', username: 'anna_look', profileLink: '@anna_look', since: '22.04.2023' },
+  { id: 'f1', username: 'Ivan Yakymenko', profileLink: 'Ivan.sr.yakimenko', since: '12.12.2022' },
+  { id: 'f2', username: 'Kirill Mikulich', profileLink: 'Kirill_Mikulich', since: '12.12.2022' },
+  { id: 'f3', username: 'Anton Antonov', profileLink: 'Anton.Antonov', since: '12.12.2022' },
+  { id: 'f4', username: 'Oleg Olegovich', profileLink: 'OlegOlegovich', since: '12.12.2022' },
+  { id: 'f5', username: 'Anna Votakaya', profileLink: 'Anna_Votakaya', since: '12.12.2022' },
+  { id: 'f6', username: 'Nikilay Kolya', profileLink: 'Nikilay89Kolya', since: '12.12.2022' },
+  { id: 'f7', username: 'Artur Perojcov', profileLink: 'Artur_Perojcov', since: '12.12.2022' },
+  { id: 'f8', username: 'Ekaterina Mastereo', profileLink: 'Ekaterina-Mastereo', since: '12.12.2022' },
 ]
 
 export const USER_DETAILS_FOLLOWING: FollowRow[] = [
-  { id: 'fg1', username: 'inctagram_news', profileLink: '@inctagram_news', since: '09.01.2023' },
-  { id: 'fg2', username: 'design_daily', profileLink: '@design_daily', since: '30.01.2023' },
-  { id: 'fg3', username: 'photos_store', profileLink: '@photos_store', since: '11.02.2023' },
-  { id: 'fg4', username: 'content_lab', profileLink: '@content_lab', since: '15.02.2023' },
-  { id: 'fg5', username: 'motion_team', profileLink: '@motion_team', since: '02.03.2023' },
+  { id: 'fg1', username: 'Roman Ivanov', profileLink: 'Roman_Ivanov', since: '13.12.2022' },
+  { id: 'fg2', username: 'Svetlana Egorova', profileLink: 'Svetlana.Egorova', since: '13.12.2022' },
+  { id: 'fg3', username: 'Denis Baranov', profileLink: 'Denis_Baranov', since: '13.12.2022' },
+  { id: 'fg4', username: 'Andrey Sokolov', profileLink: 'Andrey_Sokolov', since: '13.12.2022' },
+  { id: 'fg5', username: 'Irina Mikhailova', profileLink: 'Irina.Mikhailova', since: '13.12.2022' },
+  { id: 'fg6', username: 'Elena Popova', profileLink: 'Elena.Popova', since: '13.12.2022' },
 ]
