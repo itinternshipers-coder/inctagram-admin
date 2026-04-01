@@ -158,6 +158,11 @@
   line-height: var(--line-height-20);
 }
 
+.tableProfileLink {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 @media (max-width: 1024px) {
   .tabs {
     grid-template-columns: repeat(2, minmax(0, 1fr));
