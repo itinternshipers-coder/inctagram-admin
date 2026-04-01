@@ -12,6 +12,7 @@ import {
 } from '@/features/users/model/user-details-mock-data'
 import { Pagination } from '@/features/users/ui/Pagination'
 import type { User } from '@/features/users/model/types'
+import Tabs from '@/shared/ui/Tabs/Tabs'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import s from './UserDetailsView.module.scss'
 
@@ -19,8 +20,6 @@ type UserDetailsViewProps = {
   user: User
   requestedUserId: string
 }
-
-type TabKey = 'uploaded' | 'payments' | 'followers' | 'following'
 
 type PageState = {
   currentPage: number
@@ -46,7 +45,6 @@ function getTotalPages(total: number, pageSize: number) {
 }
 
 export function UserDetailsView({ user, requestedUserId }: UserDetailsViewProps) {
-  const [activeTab, setActiveTab] = useState<TabKey>('uploaded')
   const [paymentsPageState, setPaymentsPageState] = useState<PageState>({ currentPage: 1, pageSize: 10 })
   const [followersPageState, setFollowersPageState] = useState<PageState>({ currentPage: 1, pageSize: 10 })
   const [followingPageState, setFollowingPageState] = useState<PageState>({ currentPage: 1, pageSize: 10 })
@@ -68,6 +66,146 @@ export function UserDetailsView({ user, requestedUserId }: UserDetailsViewProps)
   const pagedFollowing = useMemo(
     () => paginate(USER_DETAILS_FOLLOWING, followingPageState.currentPage, followingPageState.pageSize),
     [followingPageState.currentPage, followingPageState.pageSize]
+  )
+
+  const tabs = useMemo(
+    () => [
+      {
+        label: USER_DETAILS_TABS[0].label,
+        content: (
+          <div className={s.photosGrid}>
+            {USER_DETAILS_PHOTO_URLS.map((url, index) => (
+              <article key={`${url}-${index}`} className={s.photoCard}>
+                <span
+                  className={s.photo}
+                  style={{ backgroundImage: `url(${url})` }}
+                  role="img"
+                  aria-label={`Uploaded photo ${index + 1}`}
+                />
+              </article>
+            ))}
+          </div>
+        ),
+      },
+      {
+        label: USER_DETAILS_TABS[1].label,
+        content: (
+          <div className={s.tableSection}>
+            <div className={s.tableWrapper}>
+              <table className={s.table}>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Subscription</th>
+                    <th>Payment method</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pagedPayments.map((payment) => (
+                    <tr key={payment.id}>
+                      <td>{payment.date}</td>
+                      <td>{payment.amount}</td>
+                      <td>{payment.subscription}</td>
+                      <td>{payment.method}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <Pagination
+              currentPage={paymentsPageState.currentPage}
+              totalPages={getTotalPages(USER_DETAILS_PAYMENTS.length, paymentsPageState.pageSize)}
+              pageSize={paymentsPageState.pageSize}
+              onPageChange={(page) => setPaymentsPageState((prev) => ({ ...prev, currentPage: page }))}
+              onPageSizeChange={(size) => setPaymentsPageState({ currentPage: 1, pageSize: size })}
+            />
+          </div>
+        ),
+      },
+      {
+        label: USER_DETAILS_TABS[2].label,
+        content: (
+          <div className={s.tableSection}>
+            <div className={s.tableWrapper}>
+              <table className={s.table}>
+                <thead>
+                  <tr>
+                    <th>Username</th>
+                    <th>Profile link</th>
+                    <th>Followed at</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pagedFollowers.map((follower) => (
+                    <tr key={follower.id}>
+                      <td>{follower.username}</td>
+                      <td>{follower.profileLink}</td>
+                      <td>{follower.since}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <Pagination
+              currentPage={followersPageState.currentPage}
+              totalPages={getTotalPages(USER_DETAILS_FOLLOWERS.length, followersPageState.pageSize)}
+              pageSize={followersPageState.pageSize}
+              onPageChange={(page) => setFollowersPageState((prev) => ({ ...prev, currentPage: page }))}
+              onPageSizeChange={(size) => setFollowersPageState({ currentPage: 1, pageSize: size })}
+            />
+          </div>
+        ),
+      },
+      {
+        label: USER_DETAILS_TABS[3].label,
+        content: (
+          <div className={s.tableSection}>
+            <div className={s.tableWrapper}>
+              <table className={s.table}>
+                <thead>
+                  <tr>
+                    <th>Username</th>
+                    <th>Profile link</th>
+                    <th>Following since</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pagedFollowing.map((following) => (
+                    <tr key={following.id}>
+                      <td>{following.username}</td>
+                      <td>{following.profileLink}</td>
+                      <td>{following.since}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <Pagination
+              currentPage={followingPageState.currentPage}
+              totalPages={getTotalPages(USER_DETAILS_FOLLOWING.length, followingPageState.pageSize)}
+              pageSize={followingPageState.pageSize}
+              onPageChange={(page) => setFollowingPageState((prev) => ({ ...prev, currentPage: page }))}
+              onPageSizeChange={(size) => setFollowingPageState({ currentPage: 1, pageSize: size })}
+            />
+          </div>
+        ),
+      },
+    ],
+    [
+      followersPageState.currentPage,
+      followersPageState.pageSize,
+      followingPageState.currentPage,
+      followingPageState.pageSize,
+      pagedFollowers,
+      pagedFollowing,
+      pagedPayments,
+      paymentsPageState.currentPage,
+      paymentsPageState.pageSize,
+    ]
   )
 
   return (
@@ -128,138 +266,7 @@ export function UserDetailsView({ user, requestedUserId }: UserDetailsViewProps)
         </Typography>
       )}
 
-      <div className={s.tabs} role="tablist" aria-label="User details tabs">
-        {USER_DETAILS_TABS.map((tab) => (
-          <button
-            key={tab.key}
-            className={`${s.tabButton} ${activeTab === tab.key ? s.tabButtonActive : ''}`}
-            onClick={() => setActiveTab(tab.key)}
-            role="tab"
-            aria-selected={activeTab === tab.key}
-            type="button"
-          >
-            <Typography variant="h3" as="span">
-              {tab.label}
-            </Typography>
-          </button>
-        ))}
-      </div>
-
-      {activeTab === 'uploaded' && (
-        <div className={s.photosGrid}>
-          {USER_DETAILS_PHOTO_URLS.map((url, index) => (
-            <article key={`${url}-${index}`} className={s.photoCard}>
-              <span
-                className={s.photo}
-                style={{ backgroundImage: `url(${url})` }}
-                role="img"
-                aria-label={`Uploaded photo ${index + 1}`}
-              />
-            </article>
-          ))}
-        </div>
-      )}
-
-      {activeTab === 'payments' && (
-        <div className={s.tableSection}>
-          <div className={s.tableWrapper}>
-            <table className={s.table}>
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Amount</th>
-                  <th>Subscription</th>
-                  <th>Payment method</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pagedPayments.map((payment) => (
-                  <tr key={payment.id}>
-                    <td>{payment.date}</td>
-                    <td>{payment.amount}</td>
-                    <td>{payment.subscription}</td>
-                    <td>{payment.method}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <Pagination
-            currentPage={paymentsPageState.currentPage}
-            totalPages={getTotalPages(USER_DETAILS_PAYMENTS.length, paymentsPageState.pageSize)}
-            pageSize={paymentsPageState.pageSize}
-            onPageChange={(page) => setPaymentsPageState((prev) => ({ ...prev, currentPage: page }))}
-            onPageSizeChange={(size) => setPaymentsPageState({ currentPage: 1, pageSize: size })}
-          />
-        </div>
-      )}
-
-      {activeTab === 'followers' && (
-        <div className={s.tableSection}>
-          <div className={s.tableWrapper}>
-            <table className={s.table}>
-              <thead>
-                <tr>
-                  <th>Username</th>
-                  <th>Profile link</th>
-                  <th>Followed at</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pagedFollowers.map((follower) => (
-                  <tr key={follower.id}>
-                    <td>{follower.username}</td>
-                    <td>{follower.profileLink}</td>
-                    <td>{follower.since}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <Pagination
-            currentPage={followersPageState.currentPage}
-            totalPages={getTotalPages(USER_DETAILS_FOLLOWERS.length, followersPageState.pageSize)}
-            pageSize={followersPageState.pageSize}
-            onPageChange={(page) => setFollowersPageState((prev) => ({ ...prev, currentPage: page }))}
-            onPageSizeChange={(size) => setFollowersPageState({ currentPage: 1, pageSize: size })}
-          />
-        </div>
-      )}
-
-      {activeTab === 'following' && (
-        <div className={s.tableSection}>
-          <div className={s.tableWrapper}>
-            <table className={s.table}>
-              <thead>
-                <tr>
-                  <th>Username</th>
-                  <th>Profile link</th>
-                  <th>Following since</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pagedFollowing.map((following) => (
-                  <tr key={following.id}>
-                    <td>{following.username}</td>
-                    <td>{following.profileLink}</td>
-                    <td>{following.since}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <Pagination
-            currentPage={followingPageState.currentPage}
-            totalPages={getTotalPages(USER_DETAILS_FOLLOWING.length, followingPageState.pageSize)}
-            pageSize={followingPageState.pageSize}
-            onPageChange={(page) => setFollowingPageState((prev) => ({ ...prev, currentPage: page }))}
-            onPageSizeChange={(size) => setFollowingPageState({ currentPage: 1, pageSize: size })}
-          />
-        </div>
-      )}
+      <Tabs tabs={tabs} />
     </section>
   )
 }
