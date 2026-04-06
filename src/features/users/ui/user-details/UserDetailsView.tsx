@@ -3,22 +3,21 @@
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 
+import { useUserDetails } from '@/features/users/api/use-user-details'
+import { useUserPhotos } from '@/features/users/api/use-user-photos'
+import { useUserPayments } from '@/features/users/api/use-user-payments'
 import {
   USER_DETAILS_FOLLOWERS,
   USER_DETAILS_FOLLOWING,
-  USER_DETAILS_PAYMENTS,
-  USER_DETAILS_PHOTO_URLS,
   USER_DETAILS_TABS,
 } from '@/features/users/model/user-details-mock-data'
 import { Pagination } from '@/features/users/ui/Pagination'
-import type { User } from '@/features/users/model/types'
 import Tabs from '@/shared/ui/Tabs/Tabs'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import { UserSubscriptionsTable } from './userSubscriptionsTable/UserSubscriptionsTable'
 import s from './UserDetailsView.module.scss'
 
 type UserDetailsViewProps = {
-  user: User
   requestedUserId: string
 }
 
@@ -41,23 +40,37 @@ function paginate<T>(items: T[], page: number, pageSize: number) {
   return items.slice(startIndex, startIndex + pageSize)
 }
 
-function getTotalPages(total: number, pageSize: number) {
-  return Math.max(1, Math.ceil(total / pageSize))
-}
-
-export function UserDetailsView({ user, requestedUserId }: UserDetailsViewProps) {
+export function UserDetailsView({ requestedUserId }: UserDetailsViewProps) {
   const [paymentsPageState, setPaymentsPageState] = useState<PageState>({ currentPage: 1, pageSize: 10 })
   const [followersPageState, setFollowersPageState] = useState<PageState>({ currentPage: 1, pageSize: 10 })
   const [followingPageState, setFollowingPageState] = useState<PageState>({ currentPage: 1, pageSize: 10 })
+  const {
+    user,
+    loading: userLoading,
+    error: userError,
+  } = useUserDetails({
+    userId: requestedUserId,
+  })
 
-  const avatarFallback = user.username.charAt(0).toUpperCase()
-  const profileLinkHref = `https://inctagram.org/${user.profileLink}`
-  const isFallbackUser = user.id !== requestedUserId
-
-  const pagedPayments = useMemo(
-    () => paginate(USER_DETAILS_PAYMENTS, paymentsPageState.currentPage, paymentsPageState.pageSize),
-    [paymentsPageState.currentPage, paymentsPageState.pageSize]
-  )
+  const {
+    rows: paymentRows,
+    totalPages: paymentTotalPages,
+    loading: paymentsLoading,
+    error: paymentsError,
+  } = useUserPayments({
+    userId: user?.id ?? '',
+    page: paymentsPageState.currentPage,
+    pageSize: paymentsPageState.pageSize,
+  })
+  const {
+    photoUrls,
+    loading: photosLoading,
+    error: photosError,
+  } = useUserPhotos({
+    username: user?.username ?? '',
+  })
+  const avatarFallback = user?.username.charAt(0).toUpperCase() ?? ''
+  const profileLinkHref = user ? `https://inctagram.org/${user.profileLink}` : '#'
 
   const pagedFollowers = useMemo(
     () => paginate(USER_DETAILS_FOLLOWERS, followersPageState.currentPage, followersPageState.pageSize),
@@ -74,16 +87,19 @@ export function UserDetailsView({ user, requestedUserId }: UserDetailsViewProps)
       label: USER_DETAILS_TABS[0].label,
       content: (
         <div className={s.photosGrid}>
-          {USER_DETAILS_PHOTO_URLS.map((url, index) => (
-            <article key={`${url}-${index}`} className={s.photoCard}>
-              <span
-                className={s.photo}
-                style={{ backgroundImage: `url(${url})` }}
-                role="img"
-                aria-label={`Uploaded photo ${index + 1}`}
-              />
-            </article>
-          ))}
+          {photosLoading ? (
+            <Typography variant="regular_text_14">Loading photos...</Typography>
+          ) : photosError ? (
+            <Typography variant="regular_text_14">Failed to load photos: {photosError.message}</Typography>
+          ) : photoUrls.length === 0 ? (
+            <Typography variant="regular_text_14">No uploaded photos</Typography>
+          ) : (
+            photoUrls.map((url, index) => (
+              <article key={`${url}-${index}`} className={s.photoCard}>
+                <img className={s.photoImage} src={url} alt={`Uploaded photo ${index + 1}`} loading="lazy" />
+              </article>
+            ))
+          )}
         </div>
       ),
     },
@@ -91,38 +107,46 @@ export function UserDetailsView({ user, requestedUserId }: UserDetailsViewProps)
       label: USER_DETAILS_TABS[1].label,
       content: (
         <div className={s.tableSection}>
-          <div className={s.tableWrapper}>
-            <table className={s.table}>
-              <thead>
-                <tr>
-                  <th>Date of Payment</th>
-                  <th>End date of subscription</th>
-                  <th>Amount, $</th>
-                  <th>Subscription Type</th>
-                  <th>Payment Type</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pagedPayments.map((payment) => (
-                  <tr key={payment.id}>
-                    <td>{payment.paymentDate}</td>
-                    <td>{payment.endDate}</td>
-                    <td>{payment.amount}</td>
-                    <td>{payment.subscriptionType}</td>
-                    <td>{payment.paymentType}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          {paymentsLoading ? (
+            <Typography variant="regular_text_14">Loading payments...</Typography>
+          ) : paymentsError ? (
+            <Typography variant="regular_text_14">Failed to load payments: {paymentsError.message}</Typography>
+          ) : (
+            <>
+              <div className={s.tableWrapper}>
+                <table className={s.table}>
+                  <thead>
+                    <tr>
+                      <th>Date of Payment</th>
+                      <th>End date of subscription</th>
+                      <th>Amount, $</th>
+                      <th>Subscription Type</th>
+                      <th>Payment Type</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {paymentRows.map((payment) => (
+                      <tr key={payment.id}>
+                        <td>{payment.paymentDate}</td>
+                        <td>{payment.endDate}</td>
+                        <td>{payment.amount}</td>
+                        <td>{payment.subscriptionType}</td>
+                        <td>{payment.paymentType}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
 
-          <Pagination
-            currentPage={paymentsPageState.currentPage}
-            totalPages={getTotalPages(USER_DETAILS_PAYMENTS.length, paymentsPageState.pageSize)}
-            pageSize={paymentsPageState.pageSize}
-            onPageChange={(page) => setPaymentsPageState((prev) => ({ ...prev, currentPage: page }))}
-            onPageSizeChange={(size) => setPaymentsPageState({ currentPage: 1, pageSize: size })}
-          />
+              <Pagination
+                currentPage={paymentsPageState.currentPage}
+                totalPages={paymentTotalPages}
+                pageSize={paymentsPageState.pageSize}
+                onPageChange={(page) => setPaymentsPageState((prev) => ({ ...prev, currentPage: page }))}
+                onPageSizeChange={(size) => setPaymentsPageState({ currentPage: 1, pageSize: size })}
+              />
+            </>
+          )}
         </div>
       ),
     },
@@ -131,7 +155,7 @@ export function UserDetailsView({ user, requestedUserId }: UserDetailsViewProps)
       content: (
         <UserSubscriptionsTable
           rows={pagedFollowers}
-          userId={user.id}
+          userId={user?.id ?? ''}
           pageState={followersPageState}
           totalCount={USER_DETAILS_FOLLOWERS.length}
           onPageChange={(page) => setFollowersPageState((prev) => ({ ...prev, currentPage: page }))}
@@ -144,7 +168,7 @@ export function UserDetailsView({ user, requestedUserId }: UserDetailsViewProps)
       content: (
         <UserSubscriptionsTable
           rows={pagedFollowing}
-          userId={user.id}
+          userId={user?.id ?? ''}
           pageState={followingPageState}
           totalCount={USER_DETAILS_FOLLOWING.length}
           onPageChange={(page) => setFollowingPageState((prev) => ({ ...prev, currentPage: page }))}
@@ -156,63 +180,66 @@ export function UserDetailsView({ user, requestedUserId }: UserDetailsViewProps)
 
   return (
     <section className={s.container}>
-      <Link href="/users" className={s.backLink}>
-        <span aria-hidden>←</span>
-        <Typography variant="medium_text_14" as="span">
-          Back to Users List
-        </Typography>
-      </Link>
-
-      <header className={s.userHeader}>
-        <div className={s.avatarWrap}>
-          {user.avatarUrl ? (
-            <span
-              className={s.avatarImage}
-              style={{ backgroundImage: `url(${user.avatarUrl})` }}
-              role="img"
-              aria-label={user.username}
-            />
-          ) : (
-            <span className={s.avatarFallback}>{avatarFallback}</span>
-          )}
-        </div>
-
-        <div className={s.userInfo}>
-          <Typography variant="h2" as="h1">
-            {user.username}
-          </Typography>
-
-          <a href={profileLinkHref} target="_blank" rel="noreferrer" className={s.profileLink}>
-            <Typography variant="regular_text_16" as="span">
-              {user.profileLink}
+      {userLoading ? (
+        <Typography variant="regular_text_14">Loading user details...</Typography>
+      ) : userError ? (
+        <Typography variant="regular_text_14">Failed to load user details: {userError.message}</Typography>
+      ) : !user ? (
+        <Typography variant="regular_text_14">User not found</Typography>
+      ) : (
+        <>
+          <Link href="/users" className={s.backLink}>
+            <span aria-hidden>←</span>
+            <Typography variant="medium_text_14" as="span">
+              Back to Users List
             </Typography>
-          </a>
+          </Link>
 
-          <div className={s.metaGrid}>
-            <div>
-              <Typography variant="regular_text_14" className={s.metaLabel}>
-                UserID
-              </Typography>
-              <Typography variant="h3">{user.id}</Typography>
+          <header className={s.userHeader}>
+            <div className={s.avatarWrap}>
+              {user.avatarUrl ? (
+                <span
+                  className={s.avatarImage}
+                  style={{ backgroundImage: `url(${user.avatarUrl})` }}
+                  role="img"
+                  aria-label={user.username}
+                />
+              ) : (
+                <span className={s.avatarFallback}>{avatarFallback}</span>
+              )}
             </div>
 
-            <div>
-              <Typography variant="regular_text_14" className={s.metaLabel}>
-                Profile Creation Date
+            <div className={s.userInfo}>
+              <Typography variant="h2" as="h1">
+                {user.username}
               </Typography>
-              <Typography variant="h3">{formatDate(user.dataAdded)}</Typography>
-            </div>
-          </div>
-        </div>
-      </header>
 
-      {isFallbackUser && (
-        <Typography variant="small_text" className={s.fallbackNote}>
-          User with id {requestedUserId} not found in mock data. Showing first available user.
-        </Typography>
+              <a href={profileLinkHref} target="_blank" rel="noreferrer" className={s.profileLink}>
+                <Typography variant="regular_text_16" as="span">
+                  {user.profileLink}
+                </Typography>
+              </a>
+
+              <div className={s.metaGrid}>
+                <div>
+                  <Typography variant="regular_text_14" className={s.metaLabel}>
+                    UserID
+                  </Typography>
+                  <Typography variant="h3">{user.id}</Typography>
+                </div>
+
+                <div>
+                  <Typography variant="regular_text_14" className={s.metaLabel}>
+                    Profile Creation Date
+                  </Typography>
+                  <Typography variant="h3">{formatDate(user.dataAdded)}</Typography>
+                </div>
+              </div>
+            </div>
+          </header>
+          <Tabs tabs={tabs} />
+        </>
       )}
-
-      <Tabs tabs={tabs} />
     </section>
   )
 }
