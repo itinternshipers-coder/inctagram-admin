@@ -60,6 +60,40 @@ export const GET_USER_PAYMENTS = gql`
   }
 `
 
+export const GET_USER_FOLLOWERS = gql`
+  query GetUserFollowers($input: UserFollowersInput!) {
+    userFollowers(input: $input) {
+      items {
+        id
+        username
+        createdAt
+        avatarUrl
+      }
+      page
+      pageSize
+      totalCount
+      totalPages
+    }
+  }
+`
+
+export const GET_USER_FOLLOWING = gql`
+  query GetUserFollowing($input: UserFollowersInput!) {
+    userFollowing(input: $input) {
+      items {
+        id
+        username
+        createdAt
+        avatarUrl
+      }
+      page
+      pageSize
+      totalCount
+      totalPages
+    }
+  }
+`
+
 export const GET_POSTS = gql`
   query GetPosts($input: PostsListInput) {
     posts(input: $input) {
