@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client/react'
 
 import { GET_USER_PAYMENTS } from './users-queries'
-import type { UserPaymentsInput, UserPaymentsListOutput } from '../model/types'
+import type { UserPaymentsInput, UserPaymentsListOutput } from '../model/types/types'
 
 type UseUserPaymentsParams = {
   userId: string

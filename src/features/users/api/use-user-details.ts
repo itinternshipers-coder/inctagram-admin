@@ -1,8 +1,8 @@
 import { useQuery } from '@apollo/client/react'
 
 import { GET_USER } from './users-queries'
-import type { User } from '../model/types'
-import type { UserDetail } from '../model/types'
+import type { User } from '../model/types/types'
+import type { UserDetail } from '../model/types/types'
 
 type UseUserDetailsParams = {
   userId: string

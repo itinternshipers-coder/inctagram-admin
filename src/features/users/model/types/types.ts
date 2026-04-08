@@ -65,6 +65,39 @@ export type UserPaymentsListOutput = {
   totalPages: number
 }
 
+export type UserFollowersInput = {
+  page?: number
+  pageSize?: number
+  userId: string
+}
+
+export type Follower = {
+  id: string
+  username: string
+  createdAt: string
+  avatarUrl: string | null
+}
+
+export type FollowersListOutput = {
+  items: Follower[]
+  page: number
+  pageSize: number
+  totalCount: number
+  totalPages: number
+}
+
+export type UserSubscriptionRow = {
+  id: string
+  username: string
+  profileLink: string
+  since: string
+}
+
+export type PaginationState = {
+  currentPage: number
+  pageSize: number
+}
+
 export type PostsListInput = {
   cursor?: string
   limit?: number
@@ -87,6 +120,15 @@ export type PostsListOutput = {
   items: Post[]
   hasMore: boolean
   nextCursor: string | null
+}
+
+export type PaymentRow = {
+  amount: string
+  endDate: string
+  id: string
+  paymentDate: string
+  paymentType: string
+  subscriptionType: string
 }
 
 export type UserFilter = 'all' | 'blocked' | 'not-blocked'

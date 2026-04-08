@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client/react'
 import { GET_USERS } from './users-queries'
-import { UsersListInput, UsersListOutput, UserFilter, SortDirection } from '../model/types'
+import { UsersListInput, UsersListOutput, UserFilter, SortDirection } from '../model/types/types'
 
 type UseUsersParams = {
   page: number

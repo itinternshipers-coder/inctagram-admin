@@ -1,6 +1,6 @@
 'use client'
 
-import { User, SortDirection } from '../model/types'
+import { User, SortDirection } from '../model/types/types'
 import s from './UsersTable.module.scss'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import BlockIcon from '@/shared/icons/BlockIcon'

@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useQuery } from '@apollo/client/react'
 
 import { GET_POSTS } from './users-queries'
-import type { PostsListInput, PostsListOutput } from '../model/types'
+import type { PostsListInput, PostsListOutput } from '../model/types/types'
 
 type UseUserPhotosParams = {
   username: string
