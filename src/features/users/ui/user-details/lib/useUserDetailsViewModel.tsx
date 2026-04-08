@@ -14,6 +14,24 @@ type Params = {
   user: User | null
 }
 
+function buildProfileHref(profileLink: string) {
+  const normalizedPath = `/${profileLink.replace(/^\/+/, '')}`
+  const baseApiUrl = process.env.NEXT_PUBLIC_BASE_API_URL ?? ''
+
+  if (!baseApiUrl) {
+    return normalizedPath
+  }
+
+  try {
+    const apiUrl = new URL(baseApiUrl)
+    const appOrigin = `${apiUrl.protocol}//${apiUrl.host}`
+
+    return `${appOrigin}${normalizedPath}`
+  } catch {
+    return normalizedPath
+  }
+}
+
 export function useUserDetailsViewModel({ user }: Params) {
   const [paymentsPageState, setPaymentsPageState] = useState(INITIAL_PAGE_STATE)
   const [followersPageState, setFollowersPageState] = useState(INITIAL_PAGE_STATE)
@@ -112,7 +130,7 @@ export function useUserDetailsViewModel({ user }: Params) {
 
   return {
     avatarFallback: user?.username.charAt(0).toUpperCase() ?? '',
-    profileLinkHref: user ? `https://inctagram.org/${user.profileLink}` : '#',
+    profileLinkHref: user ? buildProfileHref(user.profileLink) : '#',
     tabs,
   }
 }
