@@ -1,35 +1,21 @@
 'use client'
 
-import type { FollowRow } from '@/features/users/model/user-details-mock-data'
+import type { UserSubscriptionRow } from '@/features/users/model/types/types'
+import type { PaginationState } from '@/features/users/model/types/types'
+import { getTotalPages } from '@/features/users/model/lib/get-total-pages'
 import { Pagination } from '@/features/users/ui/Pagination'
+
 import s from './UserSubscriptionsTable.module.scss'
 
-type PageState = {
-  currentPage: number
-  pageSize: number
-}
-
-type UserSubscriptionsTableProps = {
-  rows: FollowRow[]
-  userId: string
-  pageState: PageState
+type Props = {
+  rows: UserSubscriptionRow[]
+  pageState: PaginationState
   totalCount: number
   onPageChange: (page: number) => void
   onPageSizeChange: (size: number) => void
 }
 
-function getTotalPages(total: number, pageSize: number) {
-  return Math.max(1, Math.ceil(total / pageSize))
-}
-
-export function UserSubscriptionsTable({
-  rows,
-  userId,
-  pageState,
-  totalCount,
-  onPageChange,
-  onPageSizeChange,
-}: UserSubscriptionsTableProps) {
+export function UserSubscriptionsTable({ rows, pageState, totalCount, onPageChange, onPageSizeChange }: Props) {
   return (
     <div className={s.tableSection}>
       <div className={s.tableWrapper}>
@@ -45,7 +31,7 @@ export function UserSubscriptionsTable({
           <tbody>
             {rows.map((row) => (
               <tr key={row.id}>
-                <td>{userId}</td>
+                <td>{row.id}</td>
                 <td>
                   <span className={s.tableProfileLink}>{row.profileLink}</span>
                 </td>
