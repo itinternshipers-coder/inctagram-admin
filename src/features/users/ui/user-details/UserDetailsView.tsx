@@ -6,7 +6,7 @@ import { formatDate } from '@/features/users/model/lib/format-date'
 import Tabs from '@/shared/ui/Tabs/Tabs'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import { useUserDetailsViewModel } from './lib/useUserDetailsViewModel'
-
+import ArrowBackOutlineIcon from '@/shared/icons/ArrowBackOutlineIcon'
 import s from './UserDetailsView.module.scss'
 
 type Props = {
@@ -23,6 +23,7 @@ export function UserDetailsView({ requestedUserId }: Props) {
   })
 
   const { avatarFallback, profileLinkHref, tabs } = useUserDetailsViewModel({ user })
+  const profileLinkText = user?.profileLink.replace(/^\/?profile\//i, '') ?? ''
 
   return (
     <section className={s.container}>
@@ -35,7 +36,7 @@ export function UserDetailsView({ requestedUserId }: Props) {
       ) : (
         <>
           <Link href="/users" className={s.backLink}>
-            <span aria-hidden>←</span>
+            <ArrowBackOutlineIcon />
             <Typography variant="medium_text_14" as="span">
               Back to Users List
             </Typography>
@@ -62,7 +63,7 @@ export function UserDetailsView({ requestedUserId }: Props) {
 
               <a href={profileLinkHref} target="_blank" rel="noreferrer" className={s.profileLink}>
                 <Typography variant="regular_text_16" as="span">
-                  {user.profileLink}
+                  {profileLinkText || user.profileLink}
                 </Typography>
               </a>
 
