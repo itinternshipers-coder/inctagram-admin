@@ -1,23 +1,28 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { Button } from '@/shared/ui/Button/Button'
 import MoreHorizontalOutlineIcon from '@/shared/icons/MoreHorizontalOutlineIcon'
 import s from './Dropdown.module.scss'
 import PauseCircleOutlineIcon from '@/shared/icons/PauseCircleOutlineIcon'
 import PersonRemoveOutlineIcon from '@/shared/icons/PersonRemoveOutlineIcon'
+import { clsx } from 'clsx'
 
 type Props = {
   onDelete: () => void
   onBan: () => void
   onMoreInfo: () => void
+  trigger: ReactNode
+  triggerClassName?: string
 }
 
-export const Dropdown = ({ onDelete, onBan, onMoreInfo }: Props) => {
+export const Dropdown = ({ onDelete, onBan, onMoreInfo, trigger, triggerClassName }: Props) => {
+  const triggerStyle = clsx(s.menuButton, triggerClassName)
+
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
-        <Button className={s.menuButton} variant="tertiary">
-          <MoreHorizontalOutlineIcon />
+        <Button className={triggerStyle} variant="tertiary">
+          {trigger}
         </Button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
