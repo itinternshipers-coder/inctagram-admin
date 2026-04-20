@@ -8,6 +8,7 @@ import { Pagination } from '@/features/users/ui/Pagination'
 import { useUsers } from '@/features/users/api/use-users'
 import { UserFilter, SortDirection } from '@/features/users/model/types/types'
 import s from './users.module.scss'
+import { Modal } from '@/shared/ui/Modal/Modal'
 
 const FILTER_OPTIONS: Option[] = [
   { value: 'all', label: 'Not selected' },
@@ -20,6 +21,8 @@ export default function UsersPage() {
   const [filter, setFilter] = useState<UserFilter>('all')
   const [sortDirection, setSortDirection] = useState<SortDirection>(null)
   const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
+  const [openModal, setOpenModal] = useState(false)
   const [pageSize, setPageSize] = useState(8)
 
   const { users, totalPages, loading } = useUsers({
@@ -72,6 +75,7 @@ export default function UsersPage() {
         onPageChange={setCurrentPage}
         onPageSizeChange={handlePageSizeChange}
       />
+      <Modal open={openModal} onOpenChange={() => {}} type={'delete'} userName={'aaa'} onConfirm={() => {}} />
     </div>
   )
 }
