@@ -1,10 +1,11 @@
 'use client'
 
-import { User, SortDirection } from '../model/types'
+import { User, SortDirection } from '../model/types/types'
 import s from './UsersTable.module.scss'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import BlockIcon from '@/shared/icons/BlockIcon'
 import MoreHorizontalOutlineIcon from '@/shared/icons/MoreHorizontalOutlineIcon'
+import Link from 'next/link'
 
 type UsersTableProps = {
   users: User[]
@@ -75,9 +76,13 @@ export function UsersTable({ users, sortDirection, onSort }: UsersTableProps) {
                 </Typography>
               </td>
               <td className={s.td}>
-                <button className={s.moreButton}>
+                <Link
+                  href={`/users/${user.id}`}
+                  className={s.moreButton}
+                  aria-label={`More information about ${user.username}`}
+                >
                   <MoreHorizontalOutlineIcon size={20} />
-                </button>
+                </Link>
               </td>
             </tr>
           ))}
