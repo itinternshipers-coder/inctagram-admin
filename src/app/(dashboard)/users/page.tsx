@@ -7,7 +7,7 @@ import { Input } from '@/shared/ui/Input/Input'
 import { UsersTable } from '@/features/users/ui/UsersTable'
 import { Pagination } from '@/features/users/ui/Pagination'
 import { useUsers } from '@/features/users/api/use-users'
-import { UserFilter, SortDirection } from '@/features/users/model/types'
+import { UserFilter, SortDirection } from '@/features/users/model/types/types'
 import s from './users.module.scss'
 
 const FILTER_OPTIONS: Option[] = [
