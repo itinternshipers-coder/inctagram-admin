@@ -4,7 +4,7 @@ import { Typography } from '@/shared/ui/Typography/Typography'
 import { Option, SelectBox } from '@/shared/ui/SelectBox/SelectBox'
 import s from './Pagination.module.scss'
 
-const PAGE_SIZE_OPTIONS: Option[] = [
+const DEFAULT_PAGE_SIZE_OPTIONS: Option[] = [
   { value: '10', label: '10' },
   { value: '20', label: '20' },
   { value: '50', label: '50' },
@@ -17,9 +17,17 @@ type PaginationProps = {
   pageSize: number
   onPageChange: (page: number) => void
   onPageSizeChange: (size: number) => void
+  pageSizeOptions?: Option[]
 }
 
-export function Pagination({ currentPage, totalPages, pageSize, onPageChange, onPageSizeChange }: PaginationProps) {
+export function Pagination({
+  currentPage,
+  totalPages,
+  pageSize,
+  onPageChange,
+  onPageSizeChange,
+  pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
+}: PaginationProps) {
   const getPages = () => {
     const pages: (number | '...')[] = []
 
@@ -76,7 +84,7 @@ export function Pagination({ currentPage, totalPages, pageSize, onPageChange, on
           Show
         </Typography>
         <SelectBox
-          options={PAGE_SIZE_OPTIONS}
+          options={pageSizeOptions}
           value={String(pageSize)}
           onValueChange={(v) => onPageSizeChange(Number(v))}
           width="80px"
