@@ -23,7 +23,7 @@ export function UserDetailsView({ requestedUserId }: Props) {
   })
 
   const { avatarFallback, profileLinkHref, tabs } = useUserDetailsViewModel({ user })
-  const profileLinkText = user?.profileLink.replace(/^\/?profile\//i, '') ?? ''
+  const profileLinkText = user?.profileLink.replace(/^\/?profile\//i, '') || user?.username || ''
 
   return (
     <section className={s.container}>
@@ -63,7 +63,7 @@ export function UserDetailsView({ requestedUserId }: Props) {
 
               <a href={profileLinkHref} target="_blank" rel="noreferrer" className={s.profileLink}>
                 <Typography variant="regular_text_16" as="span">
-                  {profileLinkText || user.profileLink}
+                  {profileLinkText}
                 </Typography>
               </a>
 
