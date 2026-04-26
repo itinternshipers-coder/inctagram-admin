@@ -111,6 +111,9 @@ export type PostPhoto = {
 }
 
 export type Post = {
+  avatarUrl: string | null
+  createdAt: string
+  description: string
   id: string
   username: string
   photos: PostPhoto[]

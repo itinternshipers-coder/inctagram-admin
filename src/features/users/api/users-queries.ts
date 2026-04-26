@@ -100,6 +100,9 @@ export const GET_POSTS = gql`
       items {
         id
         username
+        avatarUrl
+        createdAt
+        description
         photos {
           id
           url
@@ -108,6 +111,23 @@ export const GET_POSTS = gql`
       }
       hasMore
       nextCursor
+    }
+  }
+`
+
+export const POST_CREATED = gql`
+  subscription PostCreated {
+    postCreated {
+      id
+      username
+      avatarUrl
+      createdAt
+      description
+      photos {
+        id
+        url
+        order
+      }
     }
   }
 `
