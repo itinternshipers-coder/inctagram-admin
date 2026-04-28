@@ -14,8 +14,8 @@ type Params = {
   user: User | null
 }
 
-function buildProfileHref(profileLink: string) {
-  const normalizedPath = `/${profileLink.replace(/^\/+/, '')}`
+function buildProfileHref(userId: string) {
+  const normalizedPath = `/profile/${encodeURIComponent(userId)}`
   const baseApiUrl = process.env.NEXT_PUBLIC_BASE_API_URL ?? ''
 
   if (!baseApiUrl) {
@@ -24,7 +24,8 @@ function buildProfileHref(profileLink: string) {
 
   try {
     const apiUrl = new URL(baseApiUrl)
-    const appOrigin = `${apiUrl.protocol}//${apiUrl.host}`
+    const appHost = apiUrl.host.replace(/^gateway\./, '')
+    const appOrigin = `${apiUrl.protocol}//${appHost}`
 
     return `${appOrigin}${normalizedPath}`
   } catch {
@@ -130,7 +131,7 @@ export function useUserDetailsViewModel({ user }: Params) {
 
   return {
     avatarFallback: user?.username.charAt(0).toUpperCase() ?? '',
-    profileLinkHref: user ? buildProfileHref(user.profileLink) : '#',
+    profileLinkHref: user ? buildProfileHref(user.id) : '#',
     tabs,
   }
 }
