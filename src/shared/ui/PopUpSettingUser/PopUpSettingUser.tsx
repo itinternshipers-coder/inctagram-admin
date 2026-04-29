@@ -49,7 +49,7 @@ export const PopUpSettingUser = ({
       <button
         className={s.modalSettingBtn}
         onClick={() => {
-          router.replace(`/more-information?userId=${userId}`)
+          router.replace(`/users/${userId}`)
         }}
       >
         <MoreHorizontalOutlineIcon />
