@@ -12,6 +12,11 @@
   z-index: 99999999999999;
 }
 
+.overlayLocal {
+  position: absolute;
+  z-index: 10;
+}
+
 .loader {
   width: 32px;
   height: 90px;

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-
 import { Option, SelectBox } from '@/shared/ui/SelectBox/SelectBox'
 import { Input } from '@/shared/ui/Input/Input'
 import { UsersTable } from '@/features/users/ui/UsersTable'
@@ -21,9 +20,9 @@ export default function UsersPage() {
   const [filter, setFilter] = useState<UserFilter>('all')
   const [sortDirection, setSortDirection] = useState<SortDirection>(null)
   const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState(10)
+  const [pageSize, setPageSize] = useState(8)
 
-  const { users, totalPages } = useUsers({
+  const { users, totalPages, loading } = useUsers({
     page: currentPage,
     pageSize,
     search,
@@ -64,7 +63,7 @@ export default function UsersPage() {
         />
       </div>
 
-      <UsersTable users={users} sortDirection={sortDirection} onSort={handleSort} />
+      <UsersTable users={users} isLoading={loading} sortDirectionHandlerAction={handleSort} />
 
       <Pagination
         currentPage={currentPage}

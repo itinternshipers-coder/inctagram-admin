@@ -1,8 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
-import { PrivateRoute } from '@/shared/guards/PrivateRoute'
+import { usePathname } from 'next/navigation'
 import { Header } from '@/widgets/header/Header'
 import styles from './AdminLayout.module.scss'
 import PersonIcon from '@/shared/icons/PersonIcon'
@@ -10,6 +9,7 @@ import TrendingUpOutlineIcon from '@/shared/icons/TrendingUpOutlineIcon'
 import CreditCardOutlineIcon from '@/shared/icons/CreditCardOutlineIcon'
 import ImageOutlineIcon from '@/shared/icons/ImageOutlineIcon'
 import { Typography } from '@/shared/ui/Typography/Typography'
+import { signOutAction } from '@/shared/auth/actions'
 
 const NAV_ITEMS = [
   { href: '/users', label: 'Users list', icon: PersonIcon },
@@ -20,42 +20,36 @@ const NAV_ITEMS = [
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  const router = useRouter()
-
-  const handleLogout = () => {
-    localStorage.removeItem('adminToken')
-    router.push('/sign-in')
-  }
 
   return (
-    <PrivateRoute>
-      <div className={styles.wrapper}>
-        <Header />
-        <div className={styles.body}>
-          <nav className={styles.sidebar}>
-            {NAV_ITEMS.map(({ href, label, icon: Icon }) => (
-              <Link
-                key={href}
-                href={href}
-                className={`${styles.navLink} ${pathname.startsWith(href) ? styles.navLinkActive : ''}`}
-              >
-                <Icon size={24} />
-                <Typography variant="regular_text_14" as="span">
-                  {label}
-                </Typography>
-              </Link>
-            ))}
+    <div className={styles.wrapper}>
+      <Header />
+      <div className={styles.body}>
+        <nav className={styles.sidebar}>
+          {NAV_ITEMS.map(({ href, label, icon: Icon }) => (
+            <Link
+              key={href}
+              href={href}
+              className={`${styles.navLink} ${pathname.startsWith(href) ? styles.navLinkActive : ''}`}
+            >
+              <Icon size={24} />
+              <Typography variant="regular_text_14" as="span">
+                {label}
+              </Typography>
+            </Link>
+          ))}
 
-            <button className={styles.logoutButton} onClick={handleLogout}>
+          <form action={signOutAction}>
+            <button className={styles.logoutButton} type="submit">
               <Typography variant="regular_text_14" as="span">
                 Log Out
               </Typography>
             </button>
-          </nav>
+          </form>
+        </nav>
 
-          <main className={styles.content}>{children}</main>
-        </div>
+        <main className={styles.content}>{children}</main>
       </div>
-    </PrivateRoute>
+    </div>
   )
 }

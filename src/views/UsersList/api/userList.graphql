@@ -1,0 +1,35 @@
+query GetUsers(
+    $page: Int
+    $pageSize: Int
+    $search: String
+    $sortBy: String
+    $sortDirection: String
+    $filterBanned: String
+) {
+    users(
+        input: {
+            page: $page
+            pageSize: $pageSize
+            search: $search
+            sortBy: $sortBy
+            sortDirection: $sortDirection
+            filterBanned: $filterBanned
+        }
+    ) {
+        items {
+            id
+            username
+            profileLink
+            email
+            isBanned
+            banReason
+            bannedAt
+            dataAdded
+            avatarUrl
+        }
+        page
+        pageSize
+        totalCount
+        totalPages
+    }
+}

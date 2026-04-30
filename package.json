@@ -13,7 +13,9 @@
     "format:check": "prettier --check .",
     "prepare": "husky install",
     "pre-commit": "lint-staged",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "codegen": "graphql-codegen --config codegen.ts",
+    "codegen:watch": "graphql-codegen --config codegen.ts --watch"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -26,6 +28,7 @@
   },
   "dependencies": {
     "@apollo/client": "^4.1.6",
+    "@graphql-typed-document-node/core": "^3.2.0",
     "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-switch": "^1.2.6",
     "clsx": "^2.1.1",
@@ -35,6 +38,12 @@
     "react-dom": "19.2.4"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^6.2.1",
+    "@graphql-codegen/near-operation-file-preset": "^5.0.0",
+    "@graphql-codegen/typed-document-node": "^6.1.7",
+    "@graphql-codegen/typescript": "^5.0.9",
+    "@graphql-codegen/typescript-operations": "^5.0.9",
+    "@graphql-codegen/typescript-react-apollo": "^4.4.1",
     "@next/eslint-plugin-next": "^16.2.1",
     "@types/node": "^20",
     "@types/react": "^19",

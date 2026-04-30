@@ -1,0 +1,2 @@
+schema: https://gateway.traineegramm.ru/api/v1/graphql
+documents: '**/*.graphql'
