@@ -16,6 +16,10 @@ function getInitials(username: string) {
   return username.slice(0, 2).toUpperCase()
 }
 
+function hasImageUrl(value?: string | null) {
+  return Boolean(value?.trim())
+}
+
 function formatPostDate(value: string) {
   const date = new Date(value)
   const diffInSeconds = Math.max(0, Math.floor((Date.now() - date.getTime()) / 1000))
@@ -46,8 +50,9 @@ function formatPostDate(value: string) {
 function PostCard({ post }: { post: Post }) {
   const [activePhotoIndex, setActivePhotoIndex] = useState(0)
   const [isExpanded, setIsExpanded] = useState(false)
-  const photos = [...post.photos].sort((a, b) => a.order - b.order)
+  const photos = [...post.photos].filter((photo) => hasImageUrl(photo.url)).sort((a, b) => a.order - b.order)
   const activePhoto = photos[activePhotoIndex]
+  const avatarUrl = post.avatarUrl?.trim()
   const hasPhotos = photos.length > 0
   const hasManyPhotos = photos.length > 1
   const shouldClamp = post.description.length > 110
@@ -89,8 +94,8 @@ function PostCard({ post }: { post: Post }) {
       </div>
 
       <div className={s.author}>
-        {post.avatarUrl ? (
-          <img className={s.avatar} src={post.avatarUrl} alt="" loading="lazy" />
+        {avatarUrl ? (
+          <img className={s.avatar} src={avatarUrl} alt="" loading="lazy" />
         ) : (
           <span className={s.avatarFallback}>{getInitials(post.username)}</span>
         )}
