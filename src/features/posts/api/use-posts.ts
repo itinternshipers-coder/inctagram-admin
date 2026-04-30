@@ -1,16 +1,12 @@
 'use client'
 
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useQuery } from '@apollo/client/react'
 
-import { GET_POSTS, POST_CREATED } from '@/features/users/api/users-queries'
+import { GET_POSTS } from '@/features/users/api/users-queries'
 import type { Post, PostsListInput, PostsListOutput } from '@/features/users/model/types/types'
 
 const POSTS_LIMIT = 12
-
-type PostCreatedSubscription = {
-  postCreated: Post
-}
 
 type UsePostsParams = {
   search: string
@@ -18,10 +14,6 @@ type UsePostsParams = {
 
 function isSamePost(post: Post, candidate: Post) {
   return post.id === candidate.id
-}
-
-function matchesSearch(post: Post, search: string) {
-  return post.username.toLowerCase().includes(search.trim().toLowerCase())
 }
 
 export function usePosts({ search }: UsePostsParams) {
@@ -33,13 +25,10 @@ export function usePosts({ search }: UsePostsParams) {
     [search]
   )
 
-  const { data, loading, error, fetchMore, networkStatus, subscribeToMore } = useQuery<{ posts: PostsListOutput }>(
-    GET_POSTS,
-    {
-      notifyOnNetworkStatusChange: true,
-      variables: { input },
-    }
-  )
+  const { data, loading, error, fetchMore, networkStatus } = useQuery<{ posts: PostsListOutput }>(GET_POSTS, {
+    notifyOnNetworkStatusChange: true,
+    variables: { input },
+  })
 
   const posts = data?.posts.items ?? []
   const hasMore = data?.posts.hasMore ?? false
@@ -77,33 +66,6 @@ export function usePosts({ search }: UsePostsParams) {
       },
     })
   }, [fetchMore, hasMore, input, isFetchingMore, loading, nextCursor])
-
-  useEffect(() => {
-    const unsubscribe = subscribeToMore<PostCreatedSubscription>({
-      document: POST_CREATED,
-      updateQuery: (previous, { subscriptionData }) => {
-        const post = subscriptionData.data?.postCreated as Post | undefined
-        const previousPosts = previous.posts as PostsListOutput | undefined
-
-        if (!post || !previousPosts || !matchesSearch(post, search)) {
-          return previous as { posts: PostsListOutput }
-        }
-
-        if (previousPosts.items.some((item) => isSamePost(item, post))) {
-          return previous as { posts: PostsListOutput }
-        }
-
-        return {
-          posts: {
-            ...previousPosts,
-            items: [post, ...previousPosts.items],
-          },
-        }
-      },
-    })
-
-    return () => unsubscribe()
-  }, [search, subscribeToMore])
 
   return {
     error,
