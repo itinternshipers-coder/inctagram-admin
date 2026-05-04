@@ -21,7 +21,6 @@ export default function UsersPage() {
   const [filter, setFilter] = useState<UserFilter>('all')
   const [sortDirection, setSortDirection] = useState<SortDirection>(null)
   const [currentPage, setCurrentPage] = useState(1)
-  const [pageSize, setPageSize] = useState(10)
   const [openModal, setOpenModal] = useState(false)
   const [pageSize, setPageSize] = useState(8)
 
