@@ -1,7 +1,8 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   background-color: var(--background-element);
   color: var(--foreground);
 }
@@ -9,10 +10,12 @@
 .body {
   display: flex;
   flex: 1;
+  overflow: hidden;
 }
 
 .content {
   flex: 1;
+  overflow-y: auto;
   padding: 24px;
   background-color: var(--background-element);
 }
