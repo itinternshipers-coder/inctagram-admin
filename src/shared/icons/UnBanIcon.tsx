@@ -19,7 +19,7 @@ const UnBanIcon = ({ size = 24, color, className, ...rest }: IconProps) => (
         y1="18.4052"
         x2="16.4052"
         y2="5.31895"
-        stroke="white"
+        stroke="currentColor"
         strokeWidth="2.3"
         strokeLinecap="round"
         strokeDasharray="6 6"
