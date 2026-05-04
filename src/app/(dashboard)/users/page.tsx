@@ -21,7 +21,6 @@ export default function UsersPage() {
   const [filter, setFilter] = useState<UserFilter>('all')
   const [sortDirection, setSortDirection] = useState<SortDirection>(null)
   const [currentPage, setCurrentPage] = useState(1)
-  const [openModal, setOpenModal] = useState(false)
   const [pageSize, setPageSize] = useState(8)
 
   const { users, totalPages, loading } = useUsers({
@@ -74,7 +73,6 @@ export default function UsersPage() {
         onPageChange={setCurrentPage}
         onPageSizeChange={handlePageSizeChange}
       />
-      <Modal open={openModal} onOpenChange={() => {}} type={'delete'} userName={'aaa'} onConfirm={() => {}} />
     </div>
   )
 }
