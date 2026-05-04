@@ -11,16 +11,12 @@ import { PopUpSettingUser } from '@/shared/ui/PopUpSettingUser/PopUpSettingUser'
 import { DirectionType, SortButton, SortBy } from '@/shared/ui/SortButton/SortButton'
 import Loader from '@/shared/ui/Loader/Loader'
 import { Modal } from '@/shared/ui/Modal/Modal'
+import { formatDate } from '@/features/users/model/lib/format-date'
 
 type UsersTableProps = {
   users: User[]
   isLoading: boolean
   sortDirectionHandlerAction: (direction: DirectionType, type: SortBy) => void
-}
-
-function formatDate(dateStr: string) {
-  const date = new Date(dateStr)
-  return date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' })
 }
 
 type ModalData = {
