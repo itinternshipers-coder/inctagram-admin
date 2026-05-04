@@ -34,12 +34,13 @@ export const Sidebar = ({ pathname, handleLogout }: Props) => {
           </Typography>
         </Link>
       ))}
-      <form action={handleLogout}></form>
-      <button className={styles.logoutButton} type="submit">
-        <Typography variant="regular_text_14" as="span">
-          Log Out
-        </Typography>
-      </button>
+      <form action={handleLogout}>
+        <button className={styles.logoutButton} type="submit">
+          <Typography variant="regular_text_14" as="span">
+            Log Out
+          </Typography>
+        </button>
+      </form>
     </nav>
   )
 }
