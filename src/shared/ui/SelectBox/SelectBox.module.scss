@@ -52,6 +52,7 @@
   min-width: var(--radix-select-trigger-width);
   overflow: hidden;
   width: 100%;
+  z-index: 1010;
 
   &.active {
     border-color: var(--border);
