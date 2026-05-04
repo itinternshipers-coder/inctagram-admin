@@ -74,7 +74,7 @@
 }
 
 .message {
-  @include text-size(m, m);
+  @include text-size(s, l);
   color: var(--light-100);
 }
 
@@ -112,7 +112,7 @@
 
 .actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 12px;
   padding-top: 20px;
   padding-bottom: 24px;

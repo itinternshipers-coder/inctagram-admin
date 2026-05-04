@@ -55,20 +55,17 @@ export const Modal = ({ open, onOpenChange, type, userName, loading = false, onC
       case 'delete':
         return {
           title: 'Delete user',
-          message: `Are you sure you want to delete this user, ${userName}?`,
-          confirmText: 'Yes',
+          message: `Are you sure you want to delete this user ${userName}?`,
         }
       case 'ban':
         return {
           title: 'Ban user',
           message: `Are you sure you want to ban this user, ${userName}?`,
-          confirmText: 'Yes',
         }
       case 'unban':
         return {
           title: 'Un-Ban user',
           message: `Are you sure you want to un-ban ${userName}?`,
-          confirmText: 'Yes',
         }
     }
   }, [type, userName])
@@ -102,7 +99,6 @@ export const Modal = ({ open, onOpenChange, type, userName, loading = false, onC
         <Dialog.Content className={s.content}>
           <div className={s.header}>
             <Dialog.Title className={s.title}>{config.title}</Dialog.Title>
-
             <Dialog.Close asChild>
               <button type="button" className={s.closeBtn} aria-label="Close">
                 <CloseOutlineIcon />
@@ -150,7 +146,7 @@ export const Modal = ({ open, onOpenChange, type, userName, loading = false, onC
               onClick={handleConfirm}
               disabled={isConfirmDisabled}
             >
-              {config.confirmText}
+              Yes
             </button>
           </div>
         </Dialog.Content>
