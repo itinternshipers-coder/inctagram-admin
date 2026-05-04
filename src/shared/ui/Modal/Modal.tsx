@@ -44,6 +44,7 @@ export const Modal = ({ open, onOpenChange, type, userName, loading = false, onC
   }
 
   const handleOpenChange = (nextOpen: boolean) => {
+    if (loading) return
     if (!nextOpen) {
       resetForm()
     }
@@ -83,9 +84,7 @@ export const Modal = ({ open, onOpenChange, type, userName, loading = false, onC
       } else {
         await onConfirm()
       }
-
       resetForm()
-      onOpenChange(false)
     } catch (e) {
       console.error(e)
     }
@@ -95,12 +94,19 @@ export const Modal = ({ open, onOpenChange, type, userName, loading = false, onC
     <Dialog.Root open={open} onOpenChange={handleOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className={s.overlay} />
-
-        <Dialog.Content className={s.content}>
+        <Dialog.Content
+          className={s.content}
+          onEscapeKeyDown={(e) => {
+            if (loading) e.preventDefault()
+          }}
+          onPointerDownOutside={(e) => {
+            if (loading) e.preventDefault()
+          }}
+        >
           <div className={s.header}>
             <Dialog.Title className={s.title}>{config.title}</Dialog.Title>
             <Dialog.Close asChild>
-              <button type="button" className={s.closeBtn} aria-label="Close">
+              <button type="button" className={s.closeBtn} aria-label="Close" disabled={loading}>
                 <CloseOutlineIcon />
               </button>
             </Dialog.Close>
@@ -112,7 +118,6 @@ export const Modal = ({ open, onOpenChange, type, userName, loading = false, onC
             {type === 'ban' && (
               <div className={s.formBlock}>
                 <div className={s.selectLabel}>Reason for ban</div>
-
                 <SelectBox
                   options={BAN_REASONS}
                   value={reason}
@@ -120,7 +125,6 @@ export const Modal = ({ open, onOpenChange, type, userName, loading = false, onC
                   placeholder="Reason for ban"
                   height="36px"
                 />
-
                 {reason === 'another_reason' && (
                   <textarea
                     className={s.textarea}
@@ -139,7 +143,6 @@ export const Modal = ({ open, onOpenChange, type, userName, loading = false, onC
                 No
               </button>
             </Dialog.Close>
-
             <button
               type="button"
               className={clsx(s.btn, s.primary)}
