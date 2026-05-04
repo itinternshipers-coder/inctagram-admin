@@ -1,53 +1,35 @@
 'use client'
 
+import { useState } from 'react'
 import { User } from '../model/types/types'
 import s from './UsersTable.module.scss'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import BlockIcon from '@/shared/icons/BlockIcon'
 import MoreHorizontalOutlineIcon from '@/shared/icons/MoreHorizontalOutlineIcon'
 import { Table, TableBody, TableDataCell, TableHead, TableHeaderCell, TableRow } from '@/shared/ui'
-import { useState } from 'react'
-import { PopUpSettingUser } from '@/shared/ui/PopUpSettingUser/PopUpSettingUser'
 import { DirectionType, SortButton, SortBy } from '@/shared/ui/SortButton/SortButton'
 import Loader from '@/shared/ui/Loader/Loader'
-import { Modal } from '@/shared/ui/Modal/Modal'
-import { formatDate } from '@/features/users/model/lib/format-date'
+import { PopUpSettingUser } from '@/shared/ui/PopUpSettingUser/PopUpSettingUser'
 
 type UsersTableProps = {
   users: User[]
   isLoading: boolean
   sortDirectionHandlerAction: (direction: DirectionType, type: SortBy) => void
+  onActionSelect: (userId: string, type: 'delete' | 'ban' | 'unban', userName: string) => void
 }
 
-type ModalData = {
-  open: boolean
-  type: 'delete' | 'ban' | 'unban'
-  userName: string
-  userId: string
+function formatDate(dateStr: string) {
+  const date = new Date(dateStr)
+  return date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' })
 }
 
-export function UsersTable({ users, isLoading, sortDirectionHandlerAction }: UsersTableProps) {
+export function UsersTable({ users, isLoading, sortDirectionHandlerAction, onActionSelect }: UsersTableProps) {
   const [openedUserId, setOpenedUserId] = useState<string | null>(null)
-  const [modal, setModal] = useState<ModalData>({
-    open: false,
-    type: 'delete',
-    userName: '',
-    userId: '',
-  })
-
-  const closeModal = () => {
-    setModal((prev) => ({ ...prev, open: false }))
-  }
-
-  const handleConfirm = async (payload?: { reason?: string; customReason?: string }) => {
-    const { type, userId, userName } = modal
-    console.log('Confirm action:', type, userId, userName, payload)
-    closeModal()
-  }
 
   return (
     <div className={s.tableWrapper}>
       {isLoading && <Loader fullscreen={false}>Loading users...</Loader>}
+
       <Table className={s.table}>
         <TableHead>
           <TableRow>
@@ -76,16 +58,20 @@ export function UsersTable({ users, isLoading, sortDirectionHandlerAction }: Use
             <TableHeaderCell className={s.th} />
           </TableRow>
         </TableHead>
+
         <TableBody>
           {users.map((user) => {
             const handleDelete = () => {
-              setModal({ open: true, type: 'delete', userName: user.username, userId: user.id })
               setOpenedUserId(null)
+              onActionSelect(user.id, 'delete', user.username)
             }
-
-            const handleBanUnban = (banType: 'ban' | 'unban') => {
-              setModal({ open: true, type: banType, userName: user.username, userId: user.id })
+            const handleBan = () => {
               setOpenedUserId(null)
+              onActionSelect(user.id, 'ban', user.username)
+            }
+            const handleUnban = () => {
+              setOpenedUserId(null)
+              onActionSelect(user.id, 'unban', user.username)
             }
 
             return (
@@ -124,11 +110,9 @@ export function UsersTable({ users, isLoading, sortDirectionHandlerAction }: Use
                       handleChangeModalAction={() => setOpenedUserId(null)}
                       isOpen={openedUserId === user.id}
                       handleOpenAgreementModalAction={(_, type) => {
-                        if (type === 'delete') {
-                          handleDelete()
-                        } else {
-                          handleBanUnban(type as 'ban' | 'unban')
-                        }
+                        if (type === 'delete') handleDelete()
+                        else if (type === 'ban') handleBan()
+                        else if (type === 'unban') handleUnban()
                       }}
                       userBan={user.isBanned ?? null}
                     />
@@ -139,13 +123,6 @@ export function UsersTable({ users, isLoading, sortDirectionHandlerAction }: Use
           })}
         </TableBody>
       </Table>
-      <Modal
-        open={modal.open}
-        onOpenChange={closeModal}
-        type={modal.type}
-        userName={modal.userName}
-        onConfirm={handleConfirm}
-      />
     </div>
   )
 }
