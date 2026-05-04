@@ -7,9 +7,10 @@ import BlockIcon from '@/shared/icons/BlockIcon'
 import MoreHorizontalOutlineIcon from '@/shared/icons/MoreHorizontalOutlineIcon'
 import { Table, TableBody, TableDataCell, TableHead, TableHeaderCell, TableRow } from '@/shared/ui'
 import { useState } from 'react'
-import { AgreementsType, PopUpSettingUser } from '@/shared/ui/PopUpSettingUser/PopUpSettingUser'
+import { PopUpSettingUser } from '@/shared/ui/PopUpSettingUser/PopUpSettingUser'
 import { DirectionType, SortButton, SortBy } from '@/shared/ui/SortButton/SortButton'
 import Loader from '@/shared/ui/Loader/Loader'
+import { Modal } from '@/shared/ui/Modal/Modal'
 
 type UsersTableProps = {
   users: User[]
@@ -22,18 +23,30 @@ function formatDate(dateStr: string) {
   return date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' })
 }
 
+type ModalData = {
+  open: boolean
+  type: 'delete' | 'ban' | 'unban'
+  userName: string
+  userId: string
+}
+
 export function UsersTable({ users, isLoading, sortDirectionHandlerAction }: UsersTableProps) {
   const [openedUserId, setOpenedUserId] = useState<string | null>(null)
+  const [modal, setModal] = useState<ModalData>({
+    open: false,
+    type: 'delete',
+    userName: '',
+    userId: '',
+  })
 
-  const handleChangeModal = (userId: string | null) => {
-    setOpenedUserId(userId)
+  const closeModal = () => {
+    setModal((prev) => ({ ...prev, open: false }))
   }
 
-  const modalHandler = (_value: boolean) => {
-    handleChangeModal(null)
-  }
-  const handleOpenAgreementModal = (_value: boolean, _type: AgreementsType) => {
-    setOpenedUserId(null)
+  const handleConfirm = async (payload?: { reason?: string; customReason?: string }) => {
+    const { type, userId, userName } = modal
+    console.log('Confirm action:', type, userId, userName, payload)
+    closeModal()
   }
 
   return (
@@ -68,50 +81,75 @@ export function UsersTable({ users, isLoading, sortDirectionHandlerAction }: Use
           </TableRow>
         </TableHead>
         <TableBody>
-          {users.map((user) => (
-            <TableRow key={user.id} className={s.row}>
-              <TableDataCell className={s.td}>
-                <div className={s.userIdCell}>
-                  <div className={s.iconWrapper}>{user.isBanned && <BlockIcon size={20} />}</div>
+          {users.map((user) => {
+            const handleDelete = () => {
+              setModal({ open: true, type: 'delete', userName: user.username, userId: user.id })
+              setOpenedUserId(null)
+            }
+
+            const handleBanUnban = (banType: 'ban' | 'unban') => {
+              setModal({ open: true, type: banType, userName: user.username, userId: user.id })
+              setOpenedUserId(null)
+            }
+
+            return (
+              <TableRow key={user.id} className={s.row}>
+                <TableDataCell className={s.td}>
+                  <div className={s.userIdCell}>
+                    <div className={s.iconWrapper}>{user.isBanned && <BlockIcon size={20} />}</div>
+                    <Typography variant="regular_text_14" as="span">
+                      {user.id}
+                    </Typography>
+                  </div>
+                </TableDataCell>
+                <TableDataCell className={s.td}>
                   <Typography variant="regular_text_14" as="span">
-                    {user.id}
+                    {user.profileLink}
                   </Typography>
-                </div>
-              </TableDataCell>
-              <TableDataCell className={s.td}>
-                <Typography variant="regular_text_14" as="span">
-                  {user.profileLink}
-                </Typography>
-              </TableDataCell>
-              <TableDataCell className={s.td}>
-                <Typography variant="regular_text_14" as="span">
-                  {user.username}
-                </Typography>
-              </TableDataCell>
-              <TableDataCell className={s.td}>
-                <Typography variant="regular_text_14" as="span">
-                  {formatDate(user.dataAdded)}
-                </Typography>
-              </TableDataCell>
-              <TableDataCell className={s.td}>
-                <button className={s.moreButton} onClick={() => setOpenedUserId(user.id)}>
-                  <MoreHorizontalOutlineIcon size={20} />
-                </button>
-                {openedUserId === user.id && (
-                  <PopUpSettingUser
-                    modalHandler={modalHandler}
-                    userId={user.id}
-                    handleChangeModalAction={() => handleChangeModal(null)}
-                    isOpen={openedUserId === user.id}
-                    handleOpenAgreementModalAction={handleOpenAgreementModal}
-                    userBan={user.isBanned ?? null}
-                  />
-                )}
-              </TableDataCell>
-            </TableRow>
-          ))}
+                </TableDataCell>
+                <TableDataCell className={s.td}>
+                  <Typography variant="regular_text_14" as="span">
+                    {user.username}
+                  </Typography>
+                </TableDataCell>
+                <TableDataCell className={s.td}>
+                  <Typography variant="regular_text_14" as="span">
+                    {formatDate(user.dataAdded)}
+                  </Typography>
+                </TableDataCell>
+                <TableDataCell className={s.td}>
+                  <button className={s.moreButton} onClick={() => setOpenedUserId(user.id)}>
+                    <MoreHorizontalOutlineIcon size={20} />
+                  </button>
+                  {openedUserId === user.id && (
+                    <PopUpSettingUser
+                      modalHandler={handleDelete}
+                      userId={user.id}
+                      handleChangeModalAction={() => setOpenedUserId(null)}
+                      isOpen={openedUserId === user.id}
+                      handleOpenAgreementModalAction={(_, type) => {
+                        if (type === 'delete') {
+                          handleDelete()
+                        } else {
+                          handleBanUnban(type as 'ban' | 'unban')
+                        }
+                      }}
+                      userBan={user.isBanned ?? null}
+                    />
+                  )}
+                </TableDataCell>
+              </TableRow>
+            )
+          })}
         </TableBody>
       </Table>
+      <Modal
+        open={modal.open}
+        onOpenChange={closeModal}
+        type={modal.type}
+        userName={modal.userName}
+        onConfirm={handleConfirm}
+      />
     </div>
   )
 }
