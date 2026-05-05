@@ -17,10 +17,10 @@
   padding: 0 24px;
   display: flex;
   flex-direction: column;
-  background-color: var(--muted);
+  background-color: var(--background-lite);
   color: var(--light-100);
   border-radius: 2px;
-  border: 1px solid var(--dark-100);
+  border: 1px solid var(--border-lite);
   z-index: 1001;
   animation: fadeIn 0.2s ease;
   outline: none;
@@ -40,19 +40,19 @@
     right: -24px;
     bottom: 0;
     height: 1px;
-    background-color: var(--dark-100);
+    background-color: var(--light-900);
   }
 }
 
 .title {
   @include text-weight(700);
-  color: var(--light-100);
+  color: var(--foreground);
 }
 
 .closeBtn {
   width: 30px;
   height: 30px;
-  color: var(--light-100);
+  color: var(--foreground);
   background: transparent;
   border: none;
   cursor: pointer;
@@ -75,7 +75,7 @@
 
 .message {
   @include text-size(s, l);
-  color: var(--light-100);
+  color: var(--foreground);
 }
 
 .formBlock {
@@ -98,7 +98,7 @@
   border-radius: 2px;
   border: 1px solid var(--dark-100);
   background: var(--background);
-  color: var(--light-100);
+  color: var(--foreground);
   outline: none;
 
   &::placeholder {
