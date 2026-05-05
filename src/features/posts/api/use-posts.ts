@@ -5,8 +5,10 @@ import { useQuery } from '@apollo/client/react'
 
 import { GET_POSTS } from '@/features/users/api/users-queries'
 import type { Post, PostsListInput, PostsListOutput } from '@/features/users/model/types/types'
+import { GetUsersDocument } from '@/views/UsersList/api/userList.generated'
 
 const POSTS_LIMIT = 12
+const BANNED_USERS_PAGE_SIZE = 1000
 
 type UsePostsParams = {
   search: string
@@ -30,7 +32,23 @@ export function usePosts({ search }: UsePostsParams) {
     variables: { input },
   })
 
-  const posts = data?.posts.items ?? []
+  const { data: bannedUsersData } = useQuery(GetUsersDocument, {
+    variables: {
+      page: 1,
+      pageSize: BANNED_USERS_PAGE_SIZE,
+      filterBanned: 'banned',
+    },
+  })
+
+  const bannedUsernames = useMemo(
+    () => new Set((bannedUsersData?.users.items ?? []).filter((user) => user.isBanned).map((user) => user.username)),
+    [bannedUsersData]
+  )
+
+  const posts = useMemo(
+    () => (data?.posts.items ?? []).filter((post) => !bannedUsernames.has(post.username)),
+    [bannedUsernames, data?.posts.items]
+  )
   const hasMore = data?.posts.hasMore ?? false
   const nextCursor = data?.posts.nextCursor ?? null
   const isFetchingMore = networkStatus === 3

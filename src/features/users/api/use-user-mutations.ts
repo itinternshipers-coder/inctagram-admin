@@ -1,5 +1,6 @@
 'use client'
 
+import type { ApolloCache } from '@apollo/client'
 import { useApolloClient, useMutation } from '@apollo/client/react'
 import { GET_POSTS } from '@/features/users/api/users-queries'
 import {
@@ -18,6 +19,26 @@ type BanInput = {
 type BanFromPostInput = {
   postId: string
   reason: string
+  username: string
+}
+
+function removePostsByUsernameFromCache(cache: ApolloCache, username: string) {
+  cache.modify({
+    fields: {
+      posts(existingPosts) {
+        if (!existingPosts || typeof existingPosts !== 'object' || !('items' in existingPosts)) {
+          return existingPosts
+        }
+
+        const typedPosts = existingPosts as { items: { id: string; username: string }[] }
+
+        return {
+          ...typedPosts,
+          items: typedPosts.items.filter((post) => post.username !== username),
+        }
+      },
+    },
+  })
 }
 
 export function useUserMutations() {
@@ -41,7 +62,12 @@ export function useUserMutations() {
   }
 
   const banUserFromPost = async (input: BanFromPostInput) => {
-    await banFromPostMutation({ variables: { input } })
+    await banFromPostMutation({
+      variables: { input: { postId: input.postId, reason: input.reason } },
+      update: (cache) => {
+        removePostsByUsernameFromCache(cache, input.username)
+      },
+    })
 
     await apolloClient.refetchQueries({ include: [GET_POSTS, GetUsersDocument] })
   }

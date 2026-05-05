@@ -45,7 +45,7 @@ export function PostCard({ post }: Props) {
         ? payload.customReason
         : payload?.reason || 'bad_behavior'
 
-    await banUserFromPost({ postId: post.id, reason })
+    await banUserFromPost({ postId: post.id, reason, username: post.username })
     setIsBanModalOpen(false)
   }
 
