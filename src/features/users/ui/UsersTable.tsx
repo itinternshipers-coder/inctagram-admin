@@ -78,7 +78,9 @@ export function UsersTable({ users, isLoading, sortDirectionHandlerAction, onAct
               <TableRow key={user.id} className={s.row}>
                 <TableDataCell className={s.td}>
                   <div className={s.userIdCell}>
-                    <div className={s.iconWrapper}>{user.isBanned && <BlockIcon size={20} />}</div>
+                    <div className={s.iconWrapper}>
+                      {user.isBanned && <BlockIcon size={20} className={s.blockIcon} />}
+                    </div>
                     <Typography variant="regular_text_14" as="span">
                       {user.id}
                     </Typography>
