@@ -1,15 +1,17 @@
 'use client'
 
-import { useState } from 'react'
 import { User } from '../model/types/types'
 import s from './UsersTable.module.scss'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import BlockIcon from '@/shared/icons/BlockIcon'
 import MoreHorizontalOutlineIcon from '@/shared/icons/MoreHorizontalOutlineIcon'
+import PersonRemoveOutlineIcon from '@/shared/icons/PersonRemoveOutlineIcon'
+import UnBanIcon from '@/shared/icons/UnBanIcon'
 import { Table, TableBody, TableDataCell, TableHead, TableHeaderCell, TableRow } from '@/shared/ui'
 import { DirectionType, SortButton, SortBy } from '@/shared/ui/SortButton/SortButton'
 import Loader from '@/shared/ui/Loader/Loader'
-import { PopUpSettingUser } from '@/shared/ui/PopUpSettingUser/PopUpSettingUser'
+import { Dropdown, DropdownItem } from '@/shared/ui/Dropdown/Dropdown'
+import { useRouter } from 'next/navigation'
 
 type UsersTableProps = {
   users: User[]
@@ -24,7 +26,7 @@ function formatDate(dateStr: string) {
 }
 
 export function UsersTable({ users, isLoading, sortDirectionHandlerAction, onActionSelect }: UsersTableProps) {
-  const [openedUserId, setOpenedUserId] = useState<string | null>(null)
+  const router = useRouter()
 
   return (
     <div className={s.tableWrapper}>
@@ -61,18 +63,23 @@ export function UsersTable({ users, isLoading, sortDirectionHandlerAction, onAct
 
         <TableBody>
           {users.map((user) => {
-            const handleDelete = () => {
-              setOpenedUserId(null)
-              onActionSelect(user.id, 'delete', user.username)
-            }
-            const handleBan = () => {
-              setOpenedUserId(null)
-              onActionSelect(user.id, 'ban', user.username)
-            }
-            const handleUnban = () => {
-              setOpenedUserId(null)
-              onActionSelect(user.id, 'unban', user.username)
-            }
+            const dropdownItems: DropdownItem[] = [
+              {
+                label: 'Delete User',
+                icon: <PersonRemoveOutlineIcon />,
+                onSelect: () => onActionSelect(user.id, 'delete', user.username),
+              },
+              {
+                label: user.isBanned ? 'Un-ban User' : 'Ban in the system',
+                icon: user.isBanned ? <UnBanIcon /> : <BlockIcon />,
+                onSelect: () => onActionSelect(user.id, user.isBanned ? 'unban' : 'ban', user.username),
+              },
+              {
+                label: 'More Information',
+                icon: <MoreHorizontalOutlineIcon />,
+                onSelect: () => router.push(`/users/${user.id}`),
+              },
+            ]
 
             return (
               <TableRow key={user.id} className={s.row}>
@@ -102,23 +109,10 @@ export function UsersTable({ users, isLoading, sortDirectionHandlerAction, onAct
                   </Typography>
                 </TableDataCell>
                 <TableDataCell className={s.td}>
-                  <button className={s.moreButton} onClick={() => setOpenedUserId(user.id)}>
-                    <MoreHorizontalOutlineIcon size={20} />
-                  </button>
-                  {openedUserId === user.id && (
-                    <PopUpSettingUser
-                      modalHandler={handleDelete}
-                      userId={user.id}
-                      handleChangeModalAction={() => setOpenedUserId(null)}
-                      isOpen={openedUserId === user.id}
-                      handleOpenAgreementModalAction={(_, type) => {
-                        if (type === 'delete') handleDelete()
-                        else if (type === 'ban') handleBan()
-                        else if (type === 'unban') handleUnban()
-                      }}
-                      userBan={user.isBanned ?? null}
-                    />
-                  )}
+                  <Dropdown
+                    trigger={<MoreHorizontalOutlineIcon size={20} className={s.iconWrapper} />}
+                    items={dropdownItems}
+                  />
                 </TableDataCell>
               </TableRow>
             )

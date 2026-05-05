@@ -1,5 +1,5 @@
 .menuButton {
-  all: unset; // сбрасывает все стандартные стили кнопки
+  all: unset;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -22,7 +22,7 @@
 }
 
 .dropdownContent {
-  z-index: 999999;
+  z-index: 1050;
   background-color: #171717;
   border-radius: 2px;
   padding: 4px 0;
