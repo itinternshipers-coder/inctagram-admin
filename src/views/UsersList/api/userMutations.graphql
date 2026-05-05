@@ -1,11 +1,15 @@
 mutation DeleteUser($id: String!) {
-    deleteUser(id: $id)
+  deleteUser(id: $id)
 }
 
 mutation BanUser($input: BanUserInput!) {
-    banUser(input: $input)
+  banUser(input: $input)
+}
+
+mutation BanUserFromPost($input: BanUserFromPostInput!) {
+  banUserFromPost(input: $input)
 }
 
 mutation UnbanUser($id: String!) {
-    unbanUser(id: $id)
+  unbanUser(id: $id)
 }

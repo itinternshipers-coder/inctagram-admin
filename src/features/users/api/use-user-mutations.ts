@@ -1,11 +1,22 @@
 'use client'
 
 import { useApolloClient, useMutation } from '@apollo/client/react'
-import { BanUserDocument, DeleteUserDocument, UnbanUserDocument } from '@/views/UsersList/api/userMutations.generated'
+import { GET_POSTS } from '@/features/users/api/users-queries'
+import {
+  BanUserDocument,
+  BanUserFromPostDocument,
+  DeleteUserDocument,
+  UnbanUserDocument,
+} from '@/views/UsersList/api/userMutations.generated'
 import { GetUsersDocument } from '@/views/UsersList/api/userList.generated'
 
 type BanInput = {
   id: string
+  reason: string
+}
+
+type BanFromPostInput = {
+  postId: string
   reason: string
 }
 
@@ -14,9 +25,10 @@ export function useUserMutations() {
 
   const [deleteMutation, { loading: deleteLoading }] = useMutation(DeleteUserDocument)
   const [banMutation, { loading: banLoading }] = useMutation(BanUserDocument)
+  const [banFromPostMutation, { loading: banFromPostLoading }] = useMutation(BanUserFromPostDocument)
   const [unbanMutation, { loading: unbanLoading }] = useMutation(UnbanUserDocument)
 
-  const isLoading = deleteLoading || banLoading || unbanLoading
+  const isLoading = deleteLoading || banLoading || banFromPostLoading || unbanLoading
 
   const deleteUser = async (id: string) => {
     await deleteMutation({ variables: { id } })
@@ -28,6 +40,12 @@ export function useUserMutations() {
     await apolloClient.refetchQueries({ include: [GetUsersDocument] })
   }
 
+  const banUserFromPost = async (input: BanFromPostInput) => {
+    await banFromPostMutation({ variables: { input } })
+
+    await apolloClient.refetchQueries({ include: [GET_POSTS, GetUsersDocument] })
+  }
+
   const unbanUser = async (id: string) => {
     await unbanMutation({ variables: { id } })
     await apolloClient.refetchQueries({ include: [GetUsersDocument] })
@@ -36,6 +54,7 @@ export function useUserMutations() {
   return {
     deleteUser,
     banUser,
+    banUserFromPost,
     unbanUser,
     isLoading,
   }

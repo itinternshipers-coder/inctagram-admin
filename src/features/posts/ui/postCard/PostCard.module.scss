@@ -94,6 +94,13 @@
   margin-top: 12px;
 }
 
+.authorInfo {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+}
+
 .avatar,
 .avatarFallback {
   width: 36px;
@@ -115,9 +122,21 @@
 }
 
 .username {
+  flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.banButton.banButton {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  min-width: 32px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: var(--light-100);
 }
 
 .date {

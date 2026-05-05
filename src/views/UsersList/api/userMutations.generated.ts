@@ -13,6 +13,12 @@ export type BanUserMutationVariables = Types.Exact<{
 
 export type BanUserMutation = { __typename?: 'Mutation'; banUser: boolean }
 
+export type BanUserFromPostMutationVariables = Types.Exact<{
+  input: Types.BanUserFromPostInput
+}>
+
+export type BanUserFromPostMutation = { __typename?: 'Mutation'; banUserFromPost: boolean }
+
 export type UnbanUserMutationVariables = Types.Exact<{
   id: Types.Scalars['String']['input']
 }>
@@ -85,6 +91,42 @@ export const BanUserDocument = {
     },
   ],
 } as unknown as DocumentNode<BanUserMutation, BanUserMutationVariables>
+export const BanUserFromPostDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'BanUserFromPost' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'input' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'BanUserFromPostInput' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'banUserFromPost' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'input' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<BanUserFromPostMutation, BanUserFromPostMutationVariables>
 export const UnbanUserDocument = {
   kind: 'Document',
   definitions: [
