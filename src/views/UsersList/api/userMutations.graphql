@@ -1,0 +1,11 @@
+mutation DeleteUser($id: String!) {
+    deleteUser(id: $id)
+}
+
+mutation BanUser($input: BanUserInput!) {
+    banUser(input: $input)
+}
+
+mutation UnbanUser($id: String!) {
+    unbanUser(id: $id)
+}

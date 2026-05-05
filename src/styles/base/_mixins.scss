@@ -20,7 +20,7 @@
     font-size: var(--font-size-28);
   }
   @if $line-height == s {
-    line-height: var(--line-height-100);
+    line-height: var(--line-height-10);
   }
   @if $line-height == m {
     line-height: var(--line-height-24);

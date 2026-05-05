@@ -7,7 +7,7 @@
 .trigger {
   align-items: center;
   background-color: var(--background);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-lite);
   border-radius: 2px;
   color: var(--foreground);
   cursor: pointer;
@@ -52,6 +52,7 @@
   min-width: var(--radix-select-trigger-width);
   overflow: hidden;
   width: 100%;
+  z-index: 1010;
 
   &.active {
     border-color: var(--border);

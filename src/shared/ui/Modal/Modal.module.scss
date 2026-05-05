@@ -1,100 +1,145 @@
+@use "@/styles/base/mixins" as *;
+
 .overlay {
   position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  z-index: 20;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgb(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 1000;
 }
 
-.modal {
+.content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 378px;
+  min-height: 228px;
+  padding: 0 24px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  min-height: 240px;
-  border: 1px solid var(--dark-100);
+  background-color: var(--background-lite);
+  color: var(--light-100);
   border-radius: 2px;
-  background: var(--dark-300);
+  border: 1px solid var(--border-lite);
+  z-index: 1001;
+  animation: fadeIn 0.2s ease;
+  outline: none;
 }
 
-.modalTop {
+.header {
   display: flex;
-  flex-shrink: 0;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
+  position: relative;
+  padding: 11px 0;
 
-  padding: 12px 24px;
-  border-bottom: 1px solid var(--dark-100);
-}
-
-.modalTitle {
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1.8;
-  color: var(--light-100);
-}
-
-.modalCloseBtn {
-  cursor: pointer;
-  width: 24px;
-  height: 24px;
-  color: white;
-
-  &.isLoading {
-    color: var(--light-900);
-    opacity: 0.5;
-    pointer-events: none;
+  &::after {
+    content: "";
+    position: absolute;
+    left: -24px;
+    right: -24px;
+    bottom: 0;
+    height: 1px;
+    background-color: var(--light-900);
   }
 }
 
-.modalContent {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: space-between;
-  padding: 30px 24px 36px;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: var(--light-100);
+.title {
+  @include text-weight(700);
+  color: var(--foreground);
 }
 
-.supermodalContent {
-  display: flex;
-  flex-direction: column;
+.closeBtn {
+  width: 30px;
+  height: 30px;
+  color: var(--foreground);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 492px;
-  height: 503px;
-  flex: 1;
 
-  &.filtersStep {
-    width: 750px;
-  }
-
-  &.publishStep {
-    width: 750px;
+  &:hover {
+    opacity: 0.7;
   }
 }
 
-.photoEditingNextBtn {
-  padding: 0;
-}
-
-.buttonWrapper {
+.messageContent {
+  flex-grow: 1;
+  padding-top: 20px;
   display: flex;
-  width: 100%;
-  justify-content: space-between;
+  flex-direction: column;
 }
 
-.saveCroppedImage {
-  bottom: 51px;
-  position: absolute;
-  right: 3px;
+.message {
+  @include text-size(s, l);
+  color: var(--foreground);
+}
+
+.formBlock {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.selectLabel {
+  @include text-weight(400);
+  color: var(--light-900);
+}
+
+.textarea {
+  width: 100%;
+  min-height: 88px;
+  padding: 10px 12px;
+  resize: none;
+  border-radius: 2px;
+  border: 1px solid var(--dark-100);
+  background: var(--background);
+  color: var(--foreground);
+  outline: none;
+
+  &::placeholder {
+    color: var(--light-900);
+  }
+
+  &:focus {
+    border-color: var(--accent-500);
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 20px;
+  padding-bottom: 24px;
+}
+
+.btn {
+  min-width: 120px;
+  height: 36px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: opacity 0.15s ease;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.primary {
+  background-color: var(--accent-500);
+  color: var(--light-50);
+  border: 1px solid var(--accent-500);
+}
+
+.secondary {
+  background-color: transparent;
+  color: var(--accent-500);
+  border: 1px solid var(--accent-500);
 }

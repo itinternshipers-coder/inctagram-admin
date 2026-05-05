@@ -48,27 +48,31 @@
 [data-theme="light"],
 body[data-theme="light"] {
   --background-element: var(--light-300);
+  --background-lite: var(--light-500);
   --background: var(--light-100);
-  --foreground: var(--dark-500);
+  --foreground: var(--dark-400);
   --primary: var(--accent-500);
   --primary-foreground: var(--light-100);
   --muted: var(--light-700);
   --muted-foreground: var(--dark-300);
   --border: var(--light-700);
+  --border-lite: var(--dark-100);
   --hover: var(--dark-100);
 }
 
 // ТЁМНАЯ ТЕМА
 [data-theme="dark"],
 body[data-theme="dark"] {
-  --background-element: var(--dark-500);
+  --background-element: var(--dark-700);
+  --background-lite: var(--dark-500);
   --background: var(--dark-700);
   --foreground: var(--light-100);
   --primary: var(--accent-500);
   --primary-foreground: var(--light-100);
   --muted: var(--dark-300);
   --muted-foreground: var(--light-700);
-  --border: var(--dark-100);
+  --border: var(--dark-500);
+  --border-lite: var(--dark-100);
   --hover: var(--light-900);
 }
 
