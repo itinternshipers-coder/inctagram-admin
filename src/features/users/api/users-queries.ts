@@ -114,20 +114,3 @@ export const GET_POSTS = gql`
     }
   }
 `
-
-export const POST_CREATED = gql`
-  subscription PostCreated {
-    postCreated {
-      id
-      username
-      avatarUrl
-      createdAt
-      description
-      photos {
-        id
-        url
-        order
-      }
-    }
-  }
-`
