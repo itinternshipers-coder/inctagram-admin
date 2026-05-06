@@ -1,13 +1,12 @@
 'use client'
 
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
-
 import { usePosts } from '@/features/posts/api/use-posts'
 import { Input } from '@/shared/ui/Input/Input'
 import { Typography } from '@/shared/ui/Typography/Typography'
+import { PostCard } from '../postCard/PostCard'
 
 import s from './PostsList.module.scss'
-import { PostCard } from '../postCard/PostCard'
 
 const SEARCH_DELAY = 400
 const LOAD_MORE_OFFSET = 520

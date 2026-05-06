@@ -8,9 +8,12 @@ import BlockIcon from '@/shared/icons/BlockIcon'
 import { Typography } from '@/shared/ui/Typography/Typography'
 import { Modal } from '@/shared/ui/Modal/Modal'
 import { getInitials, hasImageUrl } from './PostCard.helpers'
-import s from './PostCard.module.scss'
 import { Button } from '@/shared/ui/Button/Button'
 import { formatTimeAgo } from '@/shared/helpers/formatTimeAgo'
+
+import s from './PostCard.module.scss'
+import ArrowIosBackOutlineIcon from '@/shared/icons/ArrowIosBackOutlineIcon'
+import ArrowIosForwardOutlineIcon from '@/shared/icons/ArrowIosForwardOutlineIcon'
 
 type Props = {
   post: Post
@@ -70,7 +73,7 @@ export function PostCard({ post }: Props) {
                 onClick={handlePreviousPhoto}
                 aria-label="Previous photo"
               >
-                {'<'}
+                <ArrowIosBackOutlineIcon />
               </Button>
 
               <Button
@@ -80,7 +83,7 @@ export function PostCard({ post }: Props) {
                 onClick={handleNextPhoto}
                 aria-label="Next photo"
               >
-                {'>'}
+                <ArrowIosForwardOutlineIcon />
               </Button>
               <div className={s.dots} aria-hidden="true">
                 {photos.map((photo, index) => (
