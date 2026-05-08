@@ -100,6 +100,9 @@ export const GET_POSTS = gql`
       items {
         id
         username
+        avatarUrl
+        createdAt
+        description
         photos {
           id
           url

@@ -1,5 +1,5 @@
-import { Typography } from '@/shared/ui/Typography/Typography'
+import { PostsList } from '@/features/posts/ui/postList/PostsList'
 
 export default function PostsPage() {
-  return <Typography variant="h1">Posts list</Typography>
+  return <PostsList />
 }
