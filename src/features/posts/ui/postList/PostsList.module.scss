@@ -14,13 +14,19 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 28px 12px;
   align-items: start;
 }
 
 .message {
   color: var(--muted-foreground);
+}
+
+@media (max-width: 1199px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .loadMoreTrigger {
@@ -30,7 +36,6 @@
 
 @media (max-width: 767px) {
   .grid {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 24px 12px;
+    grid-template-columns: 1fr;
   }
 }
